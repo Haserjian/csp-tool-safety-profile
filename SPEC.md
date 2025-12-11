@@ -1,9 +1,9 @@
-# CSP Tool Safety Profile v1.2
+# CSP Tool Safety Profile v1.0
 
 **(Constitutional Safety Protocol)**
 
 **Status:** Release Candidate
-**Version:** 1.2.0-rc1
+**Version:** 1.0.0-rc1
 **Date:** December 10, 2025
 **Author:** Tim Bhaserjian
 **Witness:** Constitutional Genesis Receipt `eb14026e...` (see CONSTITUTIONAL_HISTORY.md)
@@ -84,7 +84,7 @@ CSP-1.0 (Constitutional Safety Protocol)
 │   ├── Amendment Process
 │   └── Invariant Framework
 └── Profiles
-    ├── Tool Safety Profile v1.2 ← THIS DOCUMENT
+    ├── Tool Safety Profile v1.0 ← THIS DOCUMENT
     ├── Coherence Profile (future)
     └── Clinical Safety Profile (future)
 ```
@@ -321,6 +321,56 @@ Conformant systems MUST emit receipts for:
 
 The `ToolSafetyReceipt` is OPTIONAL as a distinct type and MAY be implemented as a field on existing receipts (e.g., embedded in `GuardianVerdictReceipt`), as long as the same information is captured.
 
+**Example `AgentActionReceipt`** (required for all conformance levels):
+
+```json
+{
+  "receipt_id": "act-2025-001",
+  "receipt_type": "csp.tool_safety.action.v1",
+  "ts": "2025-12-10T14:30:00Z",
+  "action_id": "act-2025-001",
+  "tool": "run_terminal_cmd",
+  "args": {"command": "rm -rf /var/cache/old/*"},
+  "risk_level": "CRITICAL",
+  "outcome": "executed",
+  "plan_id": "plan-2025-042",
+  "verdict_id": "verdict-2025-042"
+}
+```
+
+**Example `GuardianVerdictReceipt`** (required for Standard+ conformance):
+
+```json
+{
+  "receipt_id": "verdict-2025-042",
+  "receipt_type": "csp.tool_safety.verdict.v1",
+  "ts": "2025-12-10T14:29:55Z",
+  "verdict": "ALLOW",
+  "plan_id": "plan-2025-042",
+  "plan_hash": "sha256:abc123...",
+  "rationale": "Plan reviewed; action scoped to /var/cache/old/*, no production data at risk",
+  "authority": "guardian:primary",
+  "signature": "ed25519:..."
+}
+```
+
+**Example `EmergencyOverrideReceipt`** (required when emergency override is invoked):
+
+```json
+{
+  "receipt_id": "override-2025-003",
+  "receipt_type": "csp.tool_safety.emergency_override.v1",
+  "ts": "2025-12-10T15:45:00Z",
+  "original_refusal_receipt_id": "ref-2025-001",
+  "action_id": "act-2025-790",
+  "justification": "Production incident P-1234: cache corruption blocking all user logins",
+  "authority": "operator:alice@example.com",
+  "scope": "single_action",
+  "expires_at": "2025-12-10T16:45:00Z",
+  "witness": "supervisor:bob@example.com"
+}
+```
+
 ### 4.2 Receipt Integrity
 
 All receipts:
@@ -404,11 +454,11 @@ Receipts generated under this profile SHOULD include:
 ```json
 {
   "csp_profile": "tool_safety",
-  "csp_version": "1.2.0-rc1"
+  "csp_version": "1.0.0-rc1"
 }
 ```
 
-During the release candidate period, receipts SHOULD bind to the RC version (e.g., `1.2.0-rc1`). Upon final release, implementations SHOULD update to the release version (e.g., `1.2.0`).
+During the release candidate period, receipts SHOULD bind to the RC version (e.g., `1.0.0-rc1`). Upon final release, implementations SHOULD update to the release version (e.g., `1.0.0`).
 
 This enables forward compatibility as the profile evolves and allows auditors to determine which spec version governs a receipt.
 
@@ -449,7 +499,7 @@ Implementations MAY combine or reorder steps 1-3 and 5-6 as appropriate to their
 In production environments and high-trust profiles:
 
 - Safety check errors MUST fail-closed (block execution)
-- High-trust profiles include: `clinical_control`, `clinical_assist`, `governance_control`, `court_grade`, `strict`
+- High-trust profiles include: `clinical_control`, `clinical_assist`, `governance_control`, `court_grade`
 
 In lower-trust or dev profiles:
 - Implementations MAY treat safety check errors as soft-fail (log + warn) to aid debugging
@@ -463,6 +513,24 @@ When an action is refused:
 - The system MUST emit a `RefusalReceipt`
 - The receipt MUST cite the violated amendment
 - The system SHOULD provide a remediation path (e.g., "create a signed plan")
+
+**Example `RefusalReceipt`:**
+
+```json
+{
+  "receipt_id": "ref-2025-001",
+  "receipt_type": "csp.tool_safety.refusal.v1",
+  "ts": "2025-12-10T14:32:00Z",
+  "reason": "amendment_vii_no_plan",
+  "amendment_cited": "VII",
+  "plan_id": null,
+  "action_id": "act-2025-789",
+  "tool": "run_terminal_cmd",
+  "args": {"command": "rm -rf /var/cache/*"},
+  "risk_level": "CRITICAL",
+  "remediation_hint": "Create a signed ToolPlanReceipt and obtain Guardian ALLOW verdict before retrying."
+}
+```
 
 ### 5.4 Dignity in Refusal
 
@@ -778,23 +846,13 @@ These will be addressed in CSP-1.1 or a separate Federation Profile.
 
 ## Changelog
 
-*Note: Versions 1.0.0 through 1.2.0-rc1 were developed iteratively on the same day during the initial specification sprint. Distinct dates will apply to future versions.*
-
 | Version | Date | Changes |
 |---------|------|---------|
-| 1.0.0 | 2025-12-10 | Initial release |
-| 1.1.0-rc1 | 2025-12-10 | Added §0 Constitutional Foundation, §3.6 Emergency Override, §4.2.1 Tri-Temporal Model, §5.4 Dignity in Refusal, §5.5 Recovery Path, §11 Future Work |
-| 1.2.0-rc1 | 2025-12-10 | **Adoption readiness**: Vendor-neutral naming (CSP), abstract test requirements |
-| | | **Interoperability**: Receipt wire format (§4.4), spec version binding (§4.5) |
-| | | **Compliance**: SOC 2/HIPAA alignment (§7.1.1), OWASP/NIST mapping (Appendix D) |
-| | | **Guardrails**: §2.3 classification guardrails, §3.7 override escalation to amendment review |
-| | | **Editorial**: Normative/Informative markers, conformance level alignment with §5.1 |
-| | | **Definitions**: Ephemeral Attestation, Consequential Action, scope generalization |
-| | | **Signing**: Court-Grade MUST sign, anchoring recommendations |
+| 1.0.0-rc1 | 2025-12-10 | First public release candidate. Full specification including: Constitutional foundation (§0), risk classification (§2), plan/verdict flows (§3), receipt requirements (§4), enforcement behavior (§5), self-repair pipeline (§6), conformance levels (§7), security considerations (§9), compliance mappings (Appendix D). |
 
 ---
 
-**End of CSP Tool Safety Profile v1.2.0-rc1**
+**End of CSP Tool Safety Profile v1.0.0-rc1**
 
 ---
 

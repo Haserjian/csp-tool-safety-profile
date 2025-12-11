@@ -219,7 +219,7 @@ Validation: All 7 ledger checks pass (chain_complete, chain_contiguous, hash_cha
 
 The Antigravity incident was not a bug. It was the predictable outcome of designing for speed without constitutional constraints.
 
-CSP Tool Safety Profile v1.2 makes this class of failure **structurally impossible** at Standard conformance or higher.
+CSP Tool Safety Profile v1.0 makes this class of failure **structurally impossible** at Standard conformance or higher.
 
 The spec exists. The tests pass. The reference implementation works.
 
@@ -229,6 +229,6 @@ The question is whether the industry will adopt it before the next drive gets de
 
 ## References
 
-- [CSP Tool Safety Profile v1.2](../SPEC.md)
+- [CSP Tool Safety Profile v1.0](../SPEC.md)
 - [Futurism: Google's AI Deletes User's Entire Hard Drive](https://futurism.com/artificial-intelligence/google-ai-deletes-entire-drive)
 - Implementation access: [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues)

@@ -1,4 +1,4 @@
-# CSP Tool Safety Profile v1.2 – Implementors Guide
+# CSP Tool Safety Profile v1.0 – Implementors Guide
 
 Use this as a checklist. If you can check every box in your chosen tier, you can honestly claim **CSP Tool Safety–conformant**.
 
