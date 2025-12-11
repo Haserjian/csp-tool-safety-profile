@@ -73,7 +73,7 @@ The spec defines behaviors, not code. Implement in any language/framework.
 
 **Reference implementation** available upon request for conformance testing.
 
-**Contact:** csp-inquiries@constitutional-safety-protocol.org
+**Contact:** [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues) or reach out via the repo
 
 ---
 

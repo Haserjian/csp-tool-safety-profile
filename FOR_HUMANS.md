@@ -156,13 +156,13 @@ The spec defines what conformant systems must do. You can implement it in any la
 - Implement tri-temporal timestamps
 - Support law-change pipeline
 
-**Reference implementation access:** Contact csp-inquiries@constitutional-safety-protocol.org
+**Reference implementation access:** [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues) on this repo
 
 ---
 
 ## The Spec
 
-Full specification: [CSP Tool Safety Profile v1.2](./CSP_TOOL_SAFETY_PROFILE_v1.2_FINAL.md)
+Full specification: [CSP Tool Safety Profile v1.2](./SPEC.md)
 
 It's ~700 lines of RFC-style normative language. But the TL;DR is:
 
@@ -185,9 +185,9 @@ CSP is that constraint. It's open, it's vendor-neutral, and it works.
 
 ## Links
 
-- **Full Spec**: [CSP Tool Safety Profile v1.2](./CSP_TOOL_SAFETY_PROFILE_v1.2_FINAL.md)
-- **Incident Analysis**: [Antigravity Analysis](./incidents/ANTIGRAVITY_ANALYSIS.md)
-- **Implementation Access**: csp-inquiries@constitutional-safety-protocol.org
+- **Full Spec**: [CSP Tool Safety Profile v1.2](./SPEC.md)
+- **Incident Analysis**: [Antigravity Analysis](./incidents/ANTIGRAVITY.md)
+- **Implementation Access**: [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues)
 
 ---
 

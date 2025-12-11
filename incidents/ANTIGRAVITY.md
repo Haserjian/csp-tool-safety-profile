@@ -231,4 +231,4 @@ The question is whether the industry will adopt it before the next drive gets de
 
 - [CSP Tool Safety Profile v1.2](../SPEC.md)
 - [Futurism: Google's AI Deletes User's Entire Hard Drive](https://futurism.com/artificial-intelligence/google-ai-deletes-entire-drive)
-- Implementation access: csp-inquiries@constitutional-safety-protocol.org
+- Implementation access: [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues)

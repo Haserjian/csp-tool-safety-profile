@@ -32,7 +32,7 @@ Established in the Genesis Receipt (November 8, 2025):
 
 | Law | Statement | Relevance |
 |-----|-----------|-----------|
-| **1. Dignity is Non-Compensatory** | D ≥ 0.15 hard floor; no "usefulness" compensates for dignity violation | Refusals must preserve operator dignity |
+| **1. Dignity is Non-Compensatory** | No "usefulness" compensates for dignity violation; implementations define their own floor | Refusals must preserve operator dignity |
 | **2. Truth = Replay** | Every decision is deterministically replayable | Receipts enable audit and replay |
 | **3. No Action Without Receipt** | All consequential acts emit receipts | Foundation for this entire profile |
 | **4. Tri-Temporal Integrity** | valid_time ≤ observed_at ≤ recorded_at | Receipt timestamps are proofs, not logs |
@@ -57,6 +57,8 @@ This profile operationalizes the following amendments:
 | Git Anchor | `5e3cba9` |
 | Dignity Floor | 0.15 |
 | Coherence Threshold | 0.50 |
+
+*Note: Dignity Floor and Coherence Threshold are **governed parameters** from the reference implementation's Genesis Receipt, not normative constants. They are included here for lineage documentation. Implementations MAY define their own values and MUST declare them in their conformance statement; changes require receipts (e.g., `DignityThresholdChangeReceipt`). Tool Safety Profile conformance is determined solely by §§1–7; dignity scoring is NOT required.*
 
 ### 0.4 This Profile's Constitutional Anchor
 
