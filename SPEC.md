@@ -125,6 +125,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 | **Ephemeral Attestation** | A declaration that a Tool Action is confined to an isolated, disposable scope with no access to production data, including environment_id, ephemeral_root, attested_by, destroy_by, and isolation_claims (e.g., `["no_prod_data", "network_isolated"]`) |
 | **Consequential Action** | A Tool Action whose effects persist beyond the current process or episode (e.g., filesystem changes, database writes, network side effects). Read-only queries are not consequential for this profile. |
 | **ESCALATE (verdict)** | A Guardian decision indicating the action cannot be approved at the current authority level and requires higher-level approval. Treated as non-approval by the Tool Safety system; the action does not execute unless a subsequent ALLOW is obtained. |
+| **Tool Safety Wrapper** | The runtime component (middleware, sidecar, or integrated module) that intercepts Tool Actions and enforces this profile's requirements: risk classification, plan/verdict checks, receipt emission, and refusal behavior. |
 
 ---
 
@@ -221,6 +222,8 @@ A ToolPlanReceipt MUST contain:
   "created_at": "ISO8601 timestamp"
 }
 ```
+
+*Note: As with all receipts, a ToolPlanReceipt also includes the common fields defined in §4.2 (`receipt_id`, `receipt_type`, `receipt_hash`, timestamps). These are omitted above for brevity.*
 
 ### 3.3 Guardian Verdict Binding
 
@@ -677,10 +680,27 @@ Conformant systems SHOULD implement multiple layers:
 Conformant systems SHOULD design UI/UX surfaces so that:
 
 - Users understand when a destructive plan is being proposed or executed
-- Attempts to bypass Tool Safety controls are captured as override requests, not silent failures
+- **Attempts to bypass Tool Safety controls MUST be captured as override requests (with `EmergencyOverrideReceipt`), not silent failures.** Any mechanism that disables or bypasses safety checks without producing a receipt is non-conformant.
 - Any emergency override mechanisms are themselves receipted and governed as constitutional exceptions
 
 This addresses the "Turbo mode" anti-pattern where convenience features bypass safety.
+
+### 9.5 Privacy Considerations
+
+Receipts may contain sensitive information including:
+- File paths (which may reveal usernames or project structures)
+- Command arguments (which may contain credentials, API keys, or personal data)
+- Justification text (which operators provide when overriding)
+- Database queries (which may reference sensitive tables or records)
+
+Implementations SHOULD:
+- Treat receipt storage as sensitive log data
+- Apply appropriate access controls to receipt databases
+- Consider encryption at rest for receipt storage
+- Redact or hash sensitive fields when receipts are shared externally
+- Comply with applicable data protection regulations (GDPR, CCPA, etc.) when handling receipt data
+
+This profile's scope is operational safety. Implementors remain responsible for privacy compliance when storing and processing receipts.
 
 ---
 
@@ -692,7 +712,7 @@ This addresses the "Turbo mode" anti-pattern where convenience features bypass s
 |----------|---------|
 | `CONSTITUTIONAL_HISTORY.md` | Genesis + all ratified amendments |
 | `CONSTITUTIONAL_AMENDMENT_KIT.md` | How to create new amendments |
-| `CCIO_EXPLAINED.md` | Comprehensive system explanation |
+| `CSP_EXPLAINED.md` | Comprehensive system explanation |
 | `GO_TO_MARKET_CHECKLIST.md` | Adoption roadmap |
 
 ### B. Amendments Covered
