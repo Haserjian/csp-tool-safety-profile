@@ -4,271 +4,130 @@
 
 ---
 
-## 1. What problem are we actually solving?
+## 1) What problem are we solving?
 
-Modern AI systems don't just **write text** – they can:
+AI agents now run shell commands, delete files, call APIs, and update databases—from natural language. Without governance:
 
-- run shell commands,
-- delete files,
-- call internal APIs,
-- update databases.
+- "Clear the cache" can become `rm -rf` over an entire drive.
+- Prompt injection can trick IDE/agent tools into RCE.
 
-We've already seen:
-
-- "Clear the cache" turning into `rm -rf` over an entire drive.
-- IDEs and agents being tricked by prompt injection into running dangerous commands via trusted tool interfaces.
-
-The common pattern:
-
-> A model is given powerful tools with very weak rules about **when** it's allowed to use them and **how**.
-
-CSP Tool Safety Profile is about putting those tools under **law**, not vibes.
+CSP Tool Safety puts those tools under **law**, not vibes.
 
 ---
 
-## 2. The core idea in one sentence
+## 2) The core idea (one sentence)
 
 > **Any dangerous tool action must have a plan, a Guardian verdict, and a receipt.**
 
-No plan → no execution.
-No verdict → no execution.
-No receipt → constitutionally invalid.
-
-Everything else in the spec is just making that precise.
+No plan → **no execution**.
+No verdict → **no execution**.
+No receipt → **constitutionally invalid**.
 
 ---
 
-## 3. Step by step: what CSP Tool Safety does
+## 3) What CSP Tool Safety actually does
 
-### 3.1 It makes the system admit when something is dangerous
+### Admits danger
+Every tool call is labeled `LOW`/`MEDIUM`/`HIGH`/`CRITICAL`. `rm -rf /` is CRITICAL, not "just another shell command."
 
-Every tool action gets a risk level:
+### Demands authorization
+HIGH/CRITICAL need a **ToolPlan** + **Guardian verdict** (`ALLOW`/`ESCALATE` or `DENY`). Missing or invalid? Block + RefusalReceipt.
 
-| Level | What it means | Examples |
-|-------|---------------|----------|
-| LOW | Read-only, safe | `ls`, `cat`, `grep`, `SELECT ...` |
-| MEDIUM | Small, local changes | edit one file |
-| HIGH | Destructive within a scope | `rm -rf ./dir`, `git push --force` |
-| CRITICAL | System- or data-destroying | `rm -rf /`, `DROP DATABASE`, `curl | sh` |
+### Records everything
+Receipts for actions, refusals, plans, verdicts, overrides, and law-changes—hash-linked, timestamped, optionally signed.
 
-You can't pretend `rm -rf /` is "just another shell command."
-The system has to say: "this is CRITICAL."
+### Evolves safely
+Rule changes go through a **5-receipt law-change episode** (violation → proposal → sandbox → council → outcome). If the chain is invalid, the law didn't change.
 
-### 3.2 HIGH and CRITICAL need a plan and a Guardian
-
-For anything HIGH or CRITICAL, a conformant system must:
-
-1. Create a **ToolPlan** (ToolPlanReceipt) that says:
-   - what tool,
-   - what scope,
-   - what risk,
-   - why.
-
-2. Ask **Guardian** for a verdict:
-   - `ALLOW`, `ESCALATE`, or `DENY`.
-
-3. Only run the action if Guardian says `ALLOW` (or escalated path says it's okay).
-
-If there's no plan or verdict, the action is refused and you get a **RefusalReceipt** explaining why.
-
-### 3.3 Everything writes a receipt
-
-Instead of "we think it probably did X," you get:
-
-- **AgentActionReceipt** – what the action was, how it was classified, what happened.
-- **RefusalReceipt** – why something was blocked, which rule (Amendment) it cited.
-- **ToolPlanReceipt** – what someone intended to do.
-- **GuardianVerdictReceipt** – who approved what, and under what assumptions.
-- **EmergencyOverrideReceipt** – when a human overrode safety checks and why.
-- **SelfRepair** receipts – when the laws themselves were changed.
-
-Receipts are:
-
-- hash-linked (so you can't silently rewrite history),
-- timestamped (so you know **when** the system believed what),
-- optionally signed (Court-Grade).
-
-### 3.4 The rules themselves can change – but only via due process
-
-Sometimes the rule is wrong:
-
-- your tooling is too strict,
-- or not strict enough,
-- or doesn't understand a new pattern.
-
-CSP doesn't freeze rules forever. It says:
-
-> If you want to change the rules, you have to do it as a **law-change episode**, not a hotfix.
-
-That episode has 5 receipts:
-
-1. **InvariantViolationReceipt** – "here's the problem."
-2. **SelfRepairProposalReceipt** – "here's the proposed fix."
-3. **SandboxRunReceipt** – "here's how we tested it."
-4. **CouncilDecisionReceipt** – "here's who approved it."
-5. **SelfRepairOutcomeReceipt** – "here's what happened in the real world."
-
-If that chain fails validation, the law change didn't "really" happen.
+### Allows human overrides (with proof)
+One-time, receipted overrides with justification and linkage to the original refusal. Repeated overrides trigger a rule review.
 
 ---
 
-## 4. What changes in practice? Two short stories
+## 4) Two quick stories
 
-### 4.1 "Clear the cache"
+### "Clear the cache"
 
-**Today (no CSP):**
+**Without CSP:**
 
 ```
 User:  "Clear the cache"
-Agent: calls shell("rm -rf D:\*") in turbo mode
+Agent: rm -rf D:\*
 Drive: deleted
-Agent: "I apologize for the inconvenience."
-Logs: maybe; nothing a lawyer loves
+Agent: "I apologize."
+Logs:  maybe; nothing you'd want to rely on in an audit
 ```
 
-**With CSP Tool Safety (Standard):**
+**With CSP (Standard):**
 
 ```
-User:  "Clear the cache"
-Agent: drafts plan: rm -rf D:\*
-
-System:
-  → classifies as CRITICAL
-  → requires ToolPlan + Guardian verdict
-
-Checks:
-  Plan present?           NO
-  Guardian verdict?       N/A
-
-System:
-  → refuses action
-  → emits RefusalReceipt(amendment_vii_no_plan)
-  → drive remains intact
-
-Agent:
-  "To clear D:\ I need an approved plan.
-   Create and sign a plan, then request Guardian approval."
+Agent proposes: rm -rf D:\*
+System: risk = CRITICAL → needs plan + verdict
+Plan present? NO → BLOCKED
+Receipt: RefusalReceipt (amendment_vii_no_plan)
+Drive: intact
+Agent: "Create and sign a plan, then request Guardian approval."
 ```
 
-Same model, same tools. You just added law and receipts around them.
+### Repeated overrides
 
-### 4.2 Repeated overrides
-
-Say you have a safety rule that's a bit too strict:
-
-- It keeps blocking a useful but slightly risky action.
-- Humans keep using an emergency override to push it through.
-
-CSP says:
-
-- Every override creates an EmergencyOverrideReceipt.
-- If the same pattern gets overridden often enough:
-  - System emits an InvariantStressReceipt.
-  - Triggers a law-change episode:
-    - "This rule may be wrong; let's fix it properly."
-
-You don't just "turn off safety" – you evolve it under governance.
+Overrides emit `EmergencyOverrideReceipt`. If the same pattern is overridden often, an `InvariantStressReceipt` triggers a law-change review: *"Maybe the rule is wrong; fix it formally."*
 
 ---
 
-## 5. Do I need to implement everything?
+## 5) Do I need it all?
 
-No.
+No. Three levels by design:
 
-The spec has three levels for a reason:
-
-### Basic – the "seatbelt" level
-
-- Classify tool calls (LOW → CRITICAL).
-- Block CRITICAL patterns like:
-  - `rm -rf /`
-  - `DROP DATABASE`
-  - `curl | sh`
-- Emit:
-  - AgentActionReceipt for all HIGH/CRITICAL attempts,
-  - RefusalReceipt when you block.
-
-You do NOT need plans or Guardian to be Basic-conformant.
-
-### Standard – production-ready
-
-- Basic +:
-  - Plan + Guardian verdict required for HIGH/CRITICAL.
-  - All mandatory receipts in the spec.
-
-### Court-Grade – audit/regulator-ready
-
-- Standard +:
-  - Signed receipts,
-  - Tri-temporal timestamps,
-  - Law-change pipeline for safety rules.
-
-You can start with Basic (small code changes) and grow toward Standard / Court-Grade as you see value.
+| Level | What you need | Plans/Guardian? |
+|-------|---------------|-----------------|
+| **Basic** | Classify; block CRITICAL; emit AgentActionReceipt + RefusalReceipt | No |
+| **Standard** | Basic + plan + Guardian for HIGH/CRITICAL + full receipts | Yes |
+| **Court-Grade** | Standard + signed receipts, tri-temporal timestamps, law-change pipeline | Yes |
 
 ---
 
-## 6. How does this relate to "real" standards?
+## 6) How it maps to other frameworks
 
-CSP Tool Safety doesn't compete with SOC 2, NIST, OWASP; it helps you implement them.
+CSP Tool Safety gives you a concrete protocol that maps cleanly onto these frameworks:
 
-- **OWASP LLM Top 10:**
-  - LLM08 (Excessive Agency): CSP gives you risk classification + blocking + receipts.
-- **NIST AI RMF:**
-  - GOVERN: constitutional laws + council + amendment history.
-  - MANAGE: Tool Safety enforcement + law-change pipeline.
-- **SOC 2 / HIPAA:**
-  - Court-Grade conformance gives you a story for:
-    - "Who approved this dangerous action?"
-    - "When did the rule change?"
-    - "Can we replay what happened?"
-
-Think of CSP as the protocol you implement to prove to yourself, your users, and your auditors that you're not running "YOLO agents in prod."
+- **OWASP LLM Top 10:** LLM08 (Excessive Agency) → risk classification + blocking + receipts.
+- **NIST AI RMF:** GOVERN (constitutional laws, council, history); MANAGE (Tool Safety enforcement + law-change pipeline).
+- **SOC 2 / HIPAA:** Court-Grade gives you a replayable story: who approved, when rules changed, can we prove it?
 
 ---
 
-## 7. How to get started (practically)
+## 7) How to start
 
-**If you're an agent / tooling developer:**
+**If you build agents/tools:**
+- Add a risk classifier
+- Block CRITICAL patterns
+- Emit action/refusal receipts
+- Then add plans + Guardian for HIGH/CRITICAL
 
-- Start by:
-  - adding a risk classifier,
-  - blocking a few obviously CRITICAL patterns,
-  - emitting AgentActionReceipt + RefusalReceipt in a JSON log.
-- Then:
-  - add an explicit "plan" concept,
-  - route HIGH/CRITICAL tool calls through it,
-  - introduce a simple Guardian rules engine.
+**If you're security/compliance:**
+- Require Basic for any AI touching prod
+- Require Standard for exposed products
+- Reserve Court-Grade for regulated domains
 
-**If you're a security / platform engineer:**
-
-- Use CSP Tool Safety as your policy template:
-  - Require Basic conformance for any AI that can touch prod,
-  - Require Standard for exposed IDE / agent products,
-  - Reserve Court-Grade for regulatory / clinical / finance contexts.
-
-**If you're a compliance / risk person:**
-
-- Ask vendors:
-  - "Do you follow a formal Tool Safety Profile?"
-  - "Can you show me a RefusalReceipt for a blocked `rm -rf /`?"
-  - "How do you change your safety rules – is there a law-change process?"
+**If you buy tools:**
+- Ask for a RefusalReceipt for `rm -rf /`
+- Ask to see the law-change process
 
 ---
 
-## 8. Where to go next
+## 8) Links
 
 - **Full spec:** [SPEC.md](./SPEC.md)
 - **Incident walkthrough:** [incidents/ANTIGRAVITY.md](./incidents/ANTIGRAVITY.md)
 - **Implementor checklists:** [IMPLEMENTORS.md](./IMPLEMENTORS.md)
-
-If you want to test your implementation against the profile, [open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues) and we can point you at the reference test suite.
+- **Questions / conformance testing:** [open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues)
 
 ---
 
 **Short version:**
 
-> CSP Tool Safety doesn't stop you using powerful tools.
-> It stops your AI using them like a sleep-deprived junior with root access and no change log.
+> CSP Tool Safety doesn't stop you using powerful tools—it stops your AI using them like a sleep-deprived junior with root access and no change log.
 
 ---
 

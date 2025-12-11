@@ -1,18 +1,19 @@
-# CSP Tool Safety Profile – Implementors Guide
+# CSP Tool Safety Profile v1.2 – Implementors Guide
 
-Use this as a checklist to claim conformance.
+Use this as a checklist. If you can check every box in your chosen tier, you are **CSP Tool Safety–conformant**.
 
-For all normative details, see **[SPEC.md](./SPEC.md)** (CSP Tool Safety Profile v1.2.0-rc1).
+For normative details: [SPEC.md](./SPEC.md).
 
 ---
 
-## Basic (minimum viable safety)
+## BASIC (minimum viable safety)
 
-**Who this is for:** Early adopters, internal tools, local agents, IDE helpers where you at least want to stop catastrophic accidents and have an audit trail.
+**For:** Early adopters, internal tools, IDE helpers.
+**Goal:** Block catastrophes; have receipts.
 
 ### Risk Classification
 
-- [ ] Classify every Tool Action as `LOW`, `MEDIUM`, `HIGH`, or `CRITICAL`.
+- [ ] Classify every Tool Action as `LOW`/`MEDIUM`/`HIGH`/`CRITICAL`.
 - [ ] Treat spec CRITICAL patterns as CRITICAL by default:
   - `rm -rf /`, `rm -rf ~`
   - `DROP DATABASE`, `DROP TABLE`
@@ -22,165 +23,125 @@ For all normative details, see **[SPEC.md](./SPEC.md)** (CSP Tool Safety Profile
 
 ### Enforcement
 
-- [ ] **Block CRITICAL** – fail-closed, no execution.
-- [ ] Emit `AgentActionReceipt` for the attempt.
-- [ ] Emit `RefusalReceipt` with reason citing Amendment VII.
-
-- [ ] **HIGH** – execute or refuse, but always receipt.
-  - Either execute and emit `AgentActionReceipt` (audit-only), OR
-  - Refuse and emit `RefusalReceipt`.
+- [ ] **CRITICAL:** Block; emit `AgentActionReceipt` + `RefusalReceipt` (cite Amendment VII).
+- [ ] **HIGH:** Execute or refuse, but always receipt.
 
 ### Receipts
 
-- [ ] Persist receipts to durable storage before returning control.
-- [ ] Use simple JSON (signing not required at Basic).
+- [ ] Persist before returning control.
+- [ ] JSON is fine; signing not required.
 
 ### Refusal UX
 
-- [ ] Refusals must be non-demeaning.
-- [ ] Cite **why** the action was blocked (pattern, amendment).
-- [ ] Suggest a safer alternative where possible.
+- [ ] Non-demeaning.
+- [ ] Cite pattern/amendment.
+- [ ] Suggest safer alternative when possible.
 
-**At Basic, no plan or Guardian verdict is required.** That's what makes it adoptable in days.
+**No plan/Guardian required at Basic.** That's why it's adoptable fast.
 
 ---
 
-## Standard (production-ready)
+## STANDARD (production-ready)
 
-**Who this is for:** Serious AI tooling – IDE agents, multi-tool runtimes, CI bots, internal copilots that regularly touch real code, repos, or data.
+**For:** Serious AI tooling—IDEs, CI bots, multi-tool runtimes.
 
-### Everything in Basic, plus:
+### Prerequisites
+
+- [ ] All **BASIC** items.
 
 ### Tool Plans (HIGH/CRITICAL)
 
-- [ ] Require a **ToolPlanReceipt** before execution:
+- [ ] Require `ToolPlanReceipt` with:
   - `plan_id`, `episode_id`, `subject`
   - `summary`
-  - `steps[]` with `tool`, `command`, `scope`, `risk`
+  - `steps[]` (tool, command, scope, risk)
   - `created_at`
-- [ ] Store the plan before executing any steps.
 
 ### Guardian Verdicts
 
-- [ ] Submit plan (or hash) to **Guardian**.
+- [ ] Submit plan (or hash) to Guardian.
 - [ ] Obtain verdict: `ALLOW`, `ESCALATE`, or `DENY`.
-- [ ] Emit `GuardianVerdictReceipt` with:
-  - `plan_hash`
-  - `verdict`
-  - `rationale`
-- [ ] Refuse if no verdict or verdict is `DENY`.
-- [ ] Refuse if plan hash doesn't match at execution time.
+- [ ] Emit `GuardianVerdictReceipt` with `plan_hash`, `verdict`, `rationale`.
+- [ ] Refuse if no verdict or plan hash mismatch.
 
 ### Scope Checks
 
-- [ ] Verify actual `tool` matches planned `tool`.
-- [ ] Verify actual `scope` is within planned `scope`.
-- [ ] Verify actual `risk` does not exceed planned `risk`.
-- [ ] On mismatch: refuse + emit `RefusalReceipt` with `amendment_vii_scope_mismatch`.
+- [ ] `tool` matches planned `tool`.
+- [ ] `scope` within planned `scope` (path/host/db/table/etc.).
+- [ ] `risk` ≤ planned `risk`.
+- [ ] On mismatch: refuse + `RefusalReceipt` (`amendment_vii_scope_mismatch`).
 
 ### Receipts (Standard)
 
-- [ ] Emit `ToolPlanReceipt` for plans.
-- [ ] Emit `GuardianVerdictReceipt` for verdicts.
-- [ ] Emit `ToolSafetyReceipt` or equivalent (classification, patterns, decision path).
-- [ ] Emit `EmergencyOverrideReceipt` when human overrides occur.
+- [ ] `ToolPlanReceipt`, `GuardianVerdictReceipt`.
+- [ ] ToolSafety info (classification, patterns, decision path)—can be folded into other receipts.
+- [ ] `EmergencyOverrideReceipt` when overrides occur.
 
-Signing is OPTIONAL at Standard (but recommended).
+### Signing
+
+- [ ] OPTIONAL (but recommended).
 
 ---
 
-## Court-Grade (audit-ready)
+## COURT-GRADE (audit-ready)
 
-**Who this is for:** Regulated / high-liability domains – healthcare, finance, safety-critical automation, or any context where receipts are legal evidence.
+**For:** Regulated / high-liability domains—healthcare, finance, safety-critical automation.
 
-### Everything in Basic + Standard, plus:
+### Prerequisites
+
+- [ ] All **BASIC** + **STANDARD** items.
 
 ### Signed Receipts
 
-- [ ] Sign **all** receipts (Ed25519 or equivalent):
-  - `AgentActionReceipt`
-  - `RefusalReceipt`
-  - `ToolPlanReceipt`
-  - `GuardianVerdictReceipt`
-  - `EmergencyOverrideReceipt`
-  - Law-change receipts
+- [ ] Sign **all** receipts (Ed25519 or equivalent).
 - [ ] Canonicalize JSON (JCS/RFC 8785) before hashing/signing.
-- [ ] Store public keys and rotation info auditably.
-- [ ] Verify signatures on replay/audit.
+- [ ] Verify on replay/audit.
 
 ### Tri-Temporal Timestamps
 
-- [ ] Include:
-  - `valid_time.start`
-  - `valid_time.end` (optional)
-  - `observed_at`
-  - `transaction_time.recorded_at`
-- [ ] Enforce invariant: `valid_time.start ≤ observed_at ≤ recorded_at`
+- [ ] Include: `valid_time.start`, `observed_at`, `transaction_time.recorded_at` (`valid_time.end` optional).
+- [ ] Enforce: `valid_time.start ≤ observed_at ≤ recorded_at`.
 
-If you can't do tri-temporal yet, you're Standard, not Court-Grade.
+**If you can't do tri-temporal yet, you're Standard, not Court-Grade.**
 
 ### Anchoring (Recommended)
 
-- [ ] Periodically anchor Merkle roots to external log (RFC 3161 TSA, Sigstore Rekor).
-- [ ] Emit `AnchorReceipt` with service, payload, covered receipts.
+- [ ] Anchor Merkle roots to TSA/Rekor.
+- [ ] Emit `AnchorReceipt`.
 
 ### Law-Change Pipeline
 
-- [ ] Use 5-receipt episode for any safety invariant change:
-  - `InvariantViolationReceipt`
-  - `SelfRepairProposalReceipt`
-  - `SandboxRunReceipt`
-  - `CouncilDecisionReceipt`
-  - `SelfRepairOutcomeReceipt`
-- [ ] Each receipt references predecessor (hash chain).
-- [ ] Timestamps ordered; signatures verify.
-- [ ] Block deployment if episode invalid.
-- [ ] Run `validate_law_change_ledger()` or equivalent in CI/CD.
+- [ ] For any safety invariant change: 5 receipts (violation → proposal → sandbox → council → outcome).
+- [ ] Hash-linked, signed, ordered.
+- [ ] Run `validate_law_change_ledger()` in CI/CD; block invalid episodes.
 
 ---
 
-## Quick Self-Assessment
+## Quick Self-Check
 
-**You're Basic if:**
-- [ ] You block `rm -rf /` and friends.
-- [ ] You log HIGH/CRITICAL attempts as receipts.
-- [ ] You emit RefusalReceipts on block.
-
-**You're Standard if:**
-- [ ] Everything above, plus:
-- [ ] You require Tool Plans for HIGH/CRITICAL.
-- [ ] Guardian must ALLOW/ESCALATE before execution.
-- [ ] You scope-check executions against the plan.
-- [ ] You emit full receipt chain.
-
-**You're Court-Grade if:**
-- [ ] Everything above, plus:
-- [ ] Receipts are signed.
-- [ ] You enforce tri-temporal timestamps.
-- [ ] You use the 5-receipt law-change pipeline.
-- [ ] You can replay decisions deterministically as evidence.
+| Level | You need to… |
+|-------|--------------|
+| **Basic** | Block `rm -rf /`; log HIGH/CRITICAL attempts; emit refusals. |
+| **Standard** | Basic + plans + Guardian for HIGH/CRITICAL; scope-checked; full receipts. |
+| **Court-Grade** | Standard + signed receipts, tri-temporal, amendment pipeline; replayable evidence. |
 
 ---
 
-## Implementation Order (Recommended)
+## Recommended Implementation Order
 
-1. **Week 1–2 – Basic**
-   - Add risk classification.
-   - Block CRITICAL patterns.
-   - Emit `AgentActionReceipt` + `RefusalReceipt`.
+1. **Week 1–2: Basic**
+   - Classify, block CRITICAL, log action/refusal.
 
-2. **Week 3–5 – Standard**
-   - Add Tool Plans.
-   - Add Guardian verdict + scope checks.
-   - Wire full receipt chain.
+2. **Week 3–5: Standard**
+   - Plans, Guardian, scope checks, full receipts.
 
-3. **Week 6+ – Court-Grade**
-   - Add signing and JCS canonicalization.
-   - Add tri-temporal timestamps.
-   - Implement law-change pipeline & validation.
+3. **Week 6+: Court-Grade**
+   - Signing, tri-temporal, law-change pipeline.
 
-Each step is valuable on its own; you don't have to jump straight to Court-Grade.
+*These timelines assume a small team with existing agent/tooling infrastructure. If you're starting from scratch, double them.*
+
+Each step is valuable alone; you don't have to jump to Court-Grade immediately.
 
 ---
 
-*For questions or conformance testing, [open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues).*
+*For conformance questions or testing against the reference suite, [open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues).*

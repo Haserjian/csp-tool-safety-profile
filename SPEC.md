@@ -12,7 +12,7 @@
 
 ## Abstract
 
-This profile defines required safety and governance controls for AI systems that can modify files, run shell commands, access databases, or perform network operations. It specifies the receipt types, authorization flows, and enforcement behaviors necessary to prevent catastrophic failures like the Google Antigravity incident (drive deletion) and IDEsaster vulnerabilities (RCE via prompt injection).
+This profile defines required safety and governance controls for AI systems that can modify files, run shell commands, access databases, or perform network operations. It specifies the receipt types, authorization flows, and enforcement behaviors necessary to prevent catastrophic failures like well-publicized "clear the cache" incidents (drive deletion) and IDEsaster-class vulnerabilities (RCE via prompt injection).
 
 Conformant systems MUST refuse destructive operations without explicit authorization, MUST emit auditable receipts for all tool actions, and MUST support constitutional amendments through a validated law-change pipeline.
 
