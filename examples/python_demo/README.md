@@ -2,6 +2,8 @@
 
 A minimal proof-of-concept demonstrating CSP Tool Safety behaviors.
 
+> **Note:** This demo does **not execute real commands**. It demonstrates enforcement + receipt semantics only. For production wrappers that intercept real tool boundaries, see [IMPLEMENTORS.md](../../IMPLEMENTORS.md).
+
 ## What this proves
 
 1. **CRITICAL without plan** → REFUSED (amendment_vii_no_plan)
