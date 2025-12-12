@@ -2,7 +2,7 @@
 
 A minimal proof-of-concept demonstrating CSP Tool Safety behaviors.
 
-> **Note:** This demo does **not execute real commands**. It demonstrates enforcement + receipt semantics only. For production wrappers that intercept real tool boundaries, see [IMPLEMENTORS.md](../../IMPLEMENTORS.md).
+> **Note:** The core demo simulates execution (no real commands). For a sandboxed real delete runner, see `real_exec/real_runner.py`. For production wrappers that intercept real tool boundaries, see [IMPLEMENTORS.md](../../IMPLEMENTORS.md).
 
 ## What this proves
 
@@ -54,6 +54,39 @@ This checks:
 ```bash
 python3 -m pytest test_classifier.py -v
 ```
+
+## Optional: sandboxed real deletes
+
+Run real filesystem deletes inside a sandbox (no sudo, defaults to `/tmp/csp_sandbox`):
+
+```bash
+cd examples/python_demo
+mkdir -p /tmp/csp_sandbox/old
+echo "hello" > /tmp/csp_sandbox/old/hello.txt
+
+# Basic: CRITICAL (sandbox root) is blocked; HIGH (inside) is allowed
+python3 real_exec/real_runner.py --mode basic \
+  --sandbox-root /tmp/csp_sandbox \
+  fs_delete --path /tmp/csp_sandbox/old
+
+# Standard: requires plan + ALLOW verdict
+python3 real_exec/real_runner.py make_plan \
+  --scope "/tmp/csp_sandbox/old/*" \
+  --out /tmp/csp_plan.json
+
+python3 real_exec/real_runner.py make_allow \
+  --plan /tmp/csp_plan.json \
+  --out /tmp/csp_verdict.json \
+  --rationale "Scoped cleanup approved"
+
+python3 real_exec/real_runner.py --mode standard \
+  --sandbox-root /tmp/csp_sandbox \
+  --plan /tmp/csp_plan.json \
+  --verdict /tmp/csp_verdict.json \
+  fs_delete --path /tmp/csp_sandbox/old
+```
+
+Receipts are written to `.csp_real_receipts/<episode_id>/`.
 
 ## Demo limitations
 
