@@ -1,0 +1,148 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/Haserjian/csp-tool-safety-profile/schemas/receipt.schema.json",
+  "title": "CSP MCP Gateway Receipt",
+  "description": "Minimum required fields for MCP gateway conformance receipts",
+  "type": "object",
+  "required": ["ts", "receipt_id", "trace_id", "principal", "mcp", "decision", "token_handling"],
+  "properties": {
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO8601 timestamp"
+    },
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique receipt identifier"
+    },
+    "trace_id": {
+      "type": "string",
+      "description": "Distributed trace correlation ID"
+    },
+    "principal": {
+      "type": "object",
+      "required": ["sub", "actor_type"],
+      "properties": {
+        "sub": {
+          "type": "string",
+          "description": "Subject identifier"
+        },
+        "actor_type": {
+          "type": "string",
+          "enum": ["user", "agent", "system"]
+        },
+        "client_id": {
+          "type": "string"
+        },
+        "org_id": {
+          "type": "string"
+        }
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "required": ["method"],
+      "properties": {
+        "method": {
+          "type": "string",
+          "enum": ["tools/list", "tools/call", "resources/read", "resources/list"]
+        },
+        "server_id": {
+          "type": "string"
+        },
+        "tool_name": {
+          "type": "string"
+        },
+        "trust_level": {
+          "type": "string",
+          "enum": ["internal", "verified", "community", "unknown"]
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "properties": {
+        "args_hash": {
+          "type": "string",
+          "description": "SHA256 hash of arguments (never raw secrets)"
+        },
+        "size_bytes_in": {
+          "type": "integer"
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["result"],
+      "properties": {
+        "result": {
+          "type": "string",
+          "enum": ["allow", "deny", "require_approval"]
+        },
+        "policy_id": {
+          "type": "string"
+        },
+        "reason_codes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "token_handling": {
+      "type": "object",
+      "required": ["mode", "passthrough_detected"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["exchanged", "vault", "blocked", "none"]
+        },
+        "audience": {
+          "type": "string"
+        },
+        "passthrough_detected": {
+          "type": "boolean",
+          "description": "MUST be false for conforming implementations"
+        }
+      }
+    },
+    "sandbox": {
+      "type": "object",
+      "properties": {
+        "fs_policy": {
+          "type": "string",
+          "enum": ["workspace_only", "read_only", "none"]
+        },
+        "net_policy": {
+          "type": "string",
+          "enum": ["allowlist", "block_all", "none"]
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "approved_by": {
+          "type": "string"
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["success", "error", "timeout"]
+        },
+        "size_bytes_out": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}
