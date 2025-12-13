@@ -7,7 +7,8 @@ Canonical reason codes for policy decisions. All conformance tests assert agains
 | Code | Severity | Description | Operator Action |
 |------|----------|-------------|-----------------|
 | `ALLOW_POLICY_MATCH` | info | Request matched an allow policy | None |
-| `DENY_NO_AUTHN` | high | Missing or invalid authentication | Check client auth config |
+| `DENY_NO_AUTHN` | high | Missing authentication token | Check client auth config |
+| `DENY_INVALID_TOKEN` | high | Invalid authentication token | Check token validity |
 | `DENY_NO_PERMISSION` | medium | Principal lacks permission for tool | Review principal permissions |
 | `DENY_TOOL_NOT_FOUND` | low | Requested tool does not exist | Check tool name |
 | `DENY_NO_MATCHING_RULE` | medium | No policy rule matched (deny-by-default) | Add explicit policy if intended |

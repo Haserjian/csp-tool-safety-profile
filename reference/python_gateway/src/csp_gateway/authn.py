@@ -12,6 +12,7 @@ class AuthnResult:
     authenticated: bool
     principal: Principal | None = None
     error: str | None = None
+    reason_codes: list[ReasonCode] | None = None
 
 
 class Authenticator:
@@ -42,6 +43,7 @@ class Authenticator:
             return AuthnResult(
                 authenticated=False,
                 error="Missing authentication token",
+                reason_codes=[ReasonCode.DENY_NO_AUTHN],
             )
 
         # Strip Bearer prefix if present
@@ -53,6 +55,7 @@ class Authenticator:
             return AuthnResult(
                 authenticated=False,
                 error="Invalid authentication token",
+                reason_codes=[ReasonCode.DENY_INVALID_TOKEN],
             )
 
         principal = Principal(
