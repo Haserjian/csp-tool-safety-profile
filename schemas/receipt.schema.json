@@ -104,7 +104,7 @@
         },
         "passthrough_detected": {
           "type": "boolean",
-          "description": "MUST be false for conforming implementations"
+          "description": "MUST be false for conforming implementations. True indicates a blocked passthrough attempt (schema allows both for forensic evidence of violations)."
         }
       }
     },

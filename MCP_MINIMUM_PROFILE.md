@@ -145,11 +145,13 @@ The MCP Security Best Practices specification explicitly forbids token passthrou
 
 **Enforce at:** Runtime executor boundary (container/VM), gateway-level egress control.
 
+**Note:** Network isolation MUST be enforced at the OS/container/VM level (e.g., iptables, network namespaces, firewall rules). Application-level "allowlists" without OS enforcement are insufficient. The gateway can *declare* intended network policy and receipt it, but the enforcement layer is below application code.
+
 **Evidence:**
 - Attempt to write outside workspace fails
 - Attempt to reach non-allowlisted domain fails
 
-**Reference:** Anthropic sandboxing guidance explicitly defines these two boundaries.
+**Reference:** Anthropic sandboxing guidance explicitly defines these two boundaries and explains why both filesystem AND network isolation are required (either alone is insufficient).
 
 ---
 

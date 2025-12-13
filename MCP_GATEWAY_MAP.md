@@ -201,21 +201,31 @@ async def handle_tools_call(
 
 class PolicyEngine:
     def evaluate(self, principal, tool_name, arguments) -> Decision:
-        rules = self.get_rules(tool_name)
+        # First: check if tool exists in registry
+        tool = self.registry.get(tool_name)
+        if not tool:
+            return Decision(result="deny", reason_codes=["DENY_TOOL_NOT_FOUND"])
 
+        # Second: evaluate policy rules
+        rules = self.get_rules(tool_name)
         for rule in rules:
             if rule.matches(principal, arguments):
                 return rule.decision
 
-        # DENY by default
+        # DENY by default (tool exists but no matching rule)
         return Decision(result="deny", reason_codes=["DENY_NO_MATCHING_RULE"])
 ```
 
 | **Test Assertion** | |
 
 ```python
-# Unknown tool → DENY
+# Unknown tool → DENY_TOOL_NOT_FOUND (tool not in registry)
 resp = await handle_tools_call(principal, "unknown_tool", {})
+assert resp.error.code == -32003
+assert "DENY_TOOL_NOT_FOUND" in resp.error.data["reason_codes"]
+
+# Known tool, no permission → DENY_NO_MATCHING_RULE
+resp = await handle_tools_call(principal, "known_tool_no_perms", {})
 assert resp.error.code == -32003
 assert "DENY_NO_MATCHING_RULE" in resp.error.data["reason_codes"]
 ```

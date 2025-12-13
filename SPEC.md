@@ -196,7 +196,7 @@ For HIGH and CRITICAL risk actions:
 
 - A **Standard** and **Court-Grade** conformant system MUST require a **ToolPlanReceipt** before execution.
 - A **Court-Grade** conformant system MUST require the plan to be **cryptographically signed** (Ed25519 or equivalent).
-- A **Standard** and **Court-Grade** conformant system MUST obtain a **Guardian verdict** of `ALLOW` or `ESCALATE` for the plan before execution.
+- A **Standard** and **Court-Grade** conformant system MUST obtain a **Guardian verdict** before execution. Only `ALLOW` permits execution; `ESCALATE` blocks execution until a subsequent `ALLOW` is obtained.
 - A **Basic** conformant system MAY log plan-like metadata and MAY enforce plan checks, but at minimum MUST apply pattern-based blocking for CRITICAL actions (see §2.2) and emit `RefusalReceipt`s when blocking.
 
 Actions without a valid plan (at Standard/Court-Grade) MUST be refused with reason `amendment_vii_no_plan`.
