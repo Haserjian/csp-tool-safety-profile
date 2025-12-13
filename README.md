@@ -4,6 +4,13 @@
 
 A vendor-neutral specification for keeping AI tools from doing catastrophic things—and giving you **receipts** when they try.
 
+- **Status:** Release Candidate (RFC). Spec-only; no public code yet.
+- **CSP Core:** Forthcoming. This Tool Safety Profile is self-contained and adoptable standalone.
+- **Conformance tiers:** Basic / Standard / Court-Grade.
+- **Council:** Defaults to maintainer(s) for single-implementor deployments; otherwise your review/approval group.
+- **Licensing:** Spec text CC BY 4.0; schemas/examples dual-licensed under MIT for implementation.
+- **Feedback / design partners:** Open an issue: https://github.com/Haserjian/csp-tool-safety-profile/issues
+
 ---
 
 ## Why this exists
@@ -76,8 +83,18 @@ Agent: "Create and sign a plan, then request Guardian approval."
 | `SPEC.md` | Full normative specification (RFC-style) |
 | `FOR_HUMANS.md` | Plain-English explainer |
 | `IMPLEMENTORS.md` | Checklists for Basic/Standard/Court-Grade |
+| `MCP_MINIMUM_PROFILE.md` | **NEW** — 9 MUSTs for MCP gateway conformance |
+| `MCP_GATEWAY_MAP.md` | **NEW** — Enforcement hooks, code patterns, test matrix |
 | `incidents/ANTIGRAVITY.md` | Example incident & CSP prevention |
-| `LICENSE` | CC BY 4.0 |
+| `SECURITY.md` | How to report vulnerabilities |
+
+### MCP Gateway Implementers
+
+If you're building an MCP gateway (Portkey, Traefik, custom), start with:
+1. `MCP_MINIMUM_PROFILE.md` — 9 concrete MUSTs with testable assertions
+2. `MCP_GATEWAY_MAP.md` — Hook locations, sample code, test matrix
+
+These companion docs address gaps identified from real gateway implementations (Red Hat, Traefik, Portkey, TrueFoundry) and documented security incidents (malicious MCP servers, tool poisoning).
 
 ---
 
