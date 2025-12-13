@@ -2,6 +2,8 @@
 
 Safety controls for AI agents using tools. Reference implementation + conformance tests.
 
+**CSP** = Constitutional Safety Protocol (not Content Security Policy)
+
 **Spec:** v1.0.0-rc1 | **License:** CC BY 4.0 (text), MIT (code)
 
 ## Quick Start
@@ -28,12 +30,21 @@ A spec + reference implementation for MCP gateways that:
 
 ## Documents
 
+**Normative:**
 | File | Purpose |
 |------|---------|
 | [SPEC.md](SPEC.md) | Full RFC-style specification |
 | [MCP_MINIMUM_PROFILE.md](MCP_MINIMUM_PROFILE.md) | 9 MUSTs for MCP gateway conformance |
+
+**Informative:**
+| File | Purpose |
+|------|---------|
+| [FOR_HUMANS.md](FOR_HUMANS.md) | Plain-English explainer |
+| [IMPLEMENTORS.md](IMPLEMENTORS.md) | Adoption checklists (Basic/Standard/Court-Grade) |
 | [CONTROL_MAP.md](CONTROL_MAP.md) | MUST → Hook → Module → Test mapping |
+| [MCP_GATEWAY_MAP.md](MCP_GATEWAY_MAP.md) | Enforcement hooks + code patterns |
 | [REASON_CODES.md](REASON_CODES.md) | Canonical reason codes |
+| [schemas/receipt.schema.json](schemas/receipt.schema.json) | JSON Schema for receipts |
 | [conformance/](conformance/) | How to claim conformance |
 
 ## Reference Implementation
@@ -55,23 +66,19 @@ reference/python_gateway/
     └── test_conformance.py  # 22 conformance tests
 ```
 
-## Conformance Tests
+## Conformance Tests (22 unit tests)
 
 | ID | MUST | Assertion |
 |----|------|-----------|
-| AUTH-01 | 2 | Missing token denied |
-| AUTH-02 | 2 | Invalid token denied |
-| DISC-01 | 3 | Unpermitted tool excluded from list |
-| DISC-02 | 3 | Permitted tool included in list |
-| AUTHZ-01 | 4 | Unknown tool denied |
-| AUTHZ-02 | 4 | No matching rule denied |
-| CRED-01 | 5 | Upstream token != client token |
-| CRED-02 | 5 | Correct audience on exchanged token |
-| VAL-01 | 7 | Unknown fields rejected |
-| VAL-02 | 7 | Oversized payload rejected |
-| VAL-03 | 7 | Path traversal rejected |
-| RCPT-01 | 9 | Every request emits receipt |
-| INC-01 | 9 | Kill switch denies tool |
+| AUTH-01/02 | 2 | Missing/invalid token denied |
+| DISC-01/02/03 | 3 | Tool visibility filtered by principal |
+| AUTHZ-01/02/03 | 4 | Unknown tool / no rule denied; permitted allowed |
+| CRED-01/02/03/04 | 5 | No token passthrough; correct exchange |
+| VAL-01/02/03/04 | 7 | Unknown fields / size / path traversal rejected |
+| RCPT-01/02/03 | 9 | Every `tools/call` emits receipt; stored |
+| INC-01/02/03 | 9 | Kill switch denies tool; deactivates |
+
+See [CONTROL_MAP.md](CONTROL_MAP.md) for full test matrix.
 
 ## Design Partners
 

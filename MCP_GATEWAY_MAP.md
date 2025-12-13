@@ -208,7 +208,7 @@ class PolicyEngine:
                 return rule.decision
 
         # DENY by default
-        return Decision(result="deny", reason_codes=["no_matching_rule"])
+        return Decision(result="deny", reason_codes=["DENY_NO_MATCHING_RULE"])
 ```
 
 | **Test Assertion** | |
@@ -217,7 +217,7 @@ class PolicyEngine:
 # Unknown tool → DENY
 resp = await handle_tools_call(principal, "unknown_tool", {})
 assert resp.error.code == -32003
-assert "no_matching_rule" in resp.error.data["reason_codes"]
+assert "DENY_NO_MATCHING_RULE" in resp.error.data["reason_codes"]
 ```
 
 ---
@@ -356,22 +356,22 @@ class PreflightValidator:
                 errors.append(f"Unknown field: {key}")
 
         if errors:
-            return ValidationResult(valid=False, reason_codes=["unknown_fields"])
+            return ValidationResult(valid=False, reason_codes=["DENY_UNKNOWN_FIELDS"])
 
         # Size limits
         args_size = len(json.dumps(arguments))
         if args_size > self.config.max_args_size:
-            return ValidationResult(valid=False, reason_codes=["payload_too_large"])
+            return ValidationResult(valid=False, reason_codes=["DENY_PAYLOAD_TOO_LARGE"])
 
         # Path restrictions for file tools
         if tool_name in self.file_tools:
             path = arguments.get("path", "")
             if not self._is_within_workspace(path):
-                return ValidationResult(valid=False, reason_codes=["path_outside_workspace"])
+                return ValidationResult(valid=False, reason_codes=["DENY_PATH_TRAVERSAL"])
 
         # Rate limiting
         if self.rate_limiter.is_exceeded(tool_name):
-            return ValidationResult(valid=False, reason_codes=["rate_limit_exceeded"])
+            return ValidationResult(valid=False, reason_codes=["DENY_RATE_LIMIT"])
 
         return ValidationResult(valid=True)
 ```
@@ -382,17 +382,17 @@ class PreflightValidator:
 # Unknown fields rejected
 result = validator.validate("tool_x", {"known_field": 1, "unknown_field": 2})
 assert not result.valid
-assert "unknown_fields" in result.reason_codes
+assert "DENY_UNKNOWN_FIELDS" in result.reason_codes
 
 # Oversized payload rejected
 result = validator.validate("tool_x", {"data": "x" * 1_000_000})
 assert not result.valid
-assert "payload_too_large" in result.reason_codes
+assert "DENY_PAYLOAD_TOO_LARGE" in result.reason_codes
 
 # Path traversal rejected
 result = validator.validate("fs_read", {"path": "../../../etc/passwd"})
 assert not result.valid
-assert "path_outside_workspace" in result.reason_codes
+assert "DENY_PATH_TRAVERSAL" in result.reason_codes
 ```
 
 ---

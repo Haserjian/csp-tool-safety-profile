@@ -1,4 +1,20 @@
+# Claude Code local settings (may contain permissions)
+.claude/
+
+# Receipt artifacts (use make generate-receipts to regenerate)
 .csp_demo_receipts/
 .csp_real_receipts/
+
+# Python
 __pycache__/
+*.pyc
+*.egg-info/
+.pytest_cache/
+.venv/
+
+# Local docs
 MASTERY_KIT.md
+
+# IDE
+.vscode/
+.idea/

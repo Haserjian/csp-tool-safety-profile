@@ -156,7 +156,8 @@ The MCP Security Best Practices specification explicitly forbids token passthrou
 ### MUST 9 — Audit Receipts + Incident Mode
 
 **Requirement:**
-- Every request generates a structured receipt (see Receipt Schema below)
+- Every `tools/call` request generates a structured receipt (see Receipt Schema below)
+- `tools/list` requests MAY be receipted (RECOMMENDED for audit trail)
 - Operational "incident mode" provides:
   - **Kill switch:** Deny/disable high-risk tools immediately
   - **Revocation:** Invalidate ephemeral keys/tokens
@@ -176,7 +177,7 @@ The MCP Security Best Practices specification explicitly forbids token passthrou
 
 ## Receipt Schema (Minimum Fields)
 
-Every gateway request MUST emit a receipt containing at minimum:
+Every `tools/call` request MUST emit a receipt containing at minimum:
 
 ```json
 {
