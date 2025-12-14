@@ -46,12 +46,7 @@ A spec + reference implementation for MCP gateways that:
 | [REASON_CODES.md](REASON_CODES.md) | Canonical reason codes |
 | [schemas/receipt.schema.json](schemas/receipt.schema.json) | JSON Schema for receipts |
 | [conformance/](conformance/) | How to claim conformance |
-
-**Strategic (CODE RED):**
-| File | Purpose |
-|------|---------|
-| [CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md](CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md) | Open RFC for portable receipts (JCS, Ed25519, anchoring) |
-| [ANTI_AGENT_MANIFESTO.md](ANTI_AGENT_MANIFESTO.md) | Positioning: "Agents are apps, governance is infrastructure" |
+| [CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md](CONSTITUTIONAL_RECEIPT_STANDARD_v0.1.md) | Receipt format spec (JCS, Ed25519, anchoring) |
 
 ## Tooling
 
