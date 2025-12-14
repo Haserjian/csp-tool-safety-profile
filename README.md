@@ -1,10 +1,22 @@
 # CSP Tool Safety Profile
 
-Safety controls for AI agents using tools. Reference implementation + conformance tests.
+![CSP](https://img.shields.io/badge/CSP-22%2F22%20tests-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue)
 
-**CSP** = Constitutional Safety Protocol (not Content Security Policy)
+**Proof your agent didn't go rogue.**
+
+When your AI agent does something unexpected, you'll wish you had receipts. CSP gives you cryptographic proof of every tool action—what happened, who authorized it, and why.
+
+> *"Agents talk via MCP. Agents prove via CSP."*
+
+---
+
+**What this is:** Governance infrastructure for tool-using AI. Deny-by-default policies, tamper-evident receipts, kill switches.
+
+**What this isn't:** An agent framework. If you want to build agents, look elsewhere. If you want to prove what your agents did, you're home.
 
 **Spec:** v1.0.0-rc1 | **License:** CC BY 4.0 (text), MIT (code)
+
+---
 
 ## Quick Start
 
@@ -18,15 +30,14 @@ PYTHONPATH=src pytest tests/ -v
 # 22 tests, ~0.04s
 ```
 
-## What This Is
+## What You Get
 
-A spec + reference implementation for MCP gateways that:
-- Filter `tools/list` by principal permissions (MUST 3)
-- Deny-by-default on `tools/call` (MUST 4)
-- Never passthrough client tokens upstream (MUST 5)
-- Validate schemas, size limits, path boundaries (MUST 7)
-- Emit receipts for every decision (MUST 9)
-- Kill switch for incident response (MUST 9)
+- **Proof when things go wrong:** Every tool action gets a receipt with timestamp, decision, and hash
+- **Deny-by-default protection:** Nothing executes without explicit policy approval
+- **Incident response:** Kill switch to disable compromised tools instantly
+- **Court-grade audit trail:** Signed receipts that hold up to scrutiny
+
+This is a spec + reference implementation for MCP gateways. 22 conformance tests verify the 9 MUSTs.
 
 ## Documents
 
@@ -110,14 +121,23 @@ reference/python_gateway/
 
 See [CONTROL_MAP.md](CONTROL_MAP.md) for full test matrix.
 
+## Who This Is For
+
+- **Security engineers** who need to prove agent behavior to their CISO
+- **Platform teams** building tool-using AI that needs guardrails
+- **Compliance teams** tired of checkbox audits that prove nothing
+
+Not for you if: you want an agent framework, you want to ship fast without safety, you think "it probably won't delete prod" is good enough.
+
 ## Design Partners
 
 Building an MCP gateway, agent runtime, or tool-using AI? I help teams implement CSP.
 
-**Available:**
-- CSP Basic Pilot (2-3 days): CRITICAL blocking + receipts
-- CSP Standard Pilot (1-2 weeks): Full 9 MUSTs + conformance tests
-- Court-Grade Upgrade: Signed receipts + audit export
+| Tier | What You Get | Timeline |
+|------|--------------|----------|
+| Basic Pilot | CRITICAL blocking + receipts | 2-3 days |
+| Standard Pilot | Full 9 MUSTs + conformance tests | 1-2 weeks |
+| Court-Grade | Signed receipts + audit export + conformance report | Custom |
 
 [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues) with label `design-partner`.
 

@@ -1,0 +1,233 @@
+# CSP Adoption Experiments
+# Based on Rory Sutherland's behavioral principles
+# Each experiment is small enough to run as an Episode and mint a receipt
+
+experiments:
+
+  # =============================================================================
+  # BADGE & STATUS EXPERIMENTS
+  # =============================================================================
+
+  - id: EXP-BADGE-001
+    name: "Badge Placement A/B"
+    principle: "Meaning beats mechanics"
+    hypothesis: "Badge at top of README (status signal) outperforms badge at bottom (compliance afterthought)"
+    variants:
+      A: "Badge in 'Badges' section at bottom"
+      B: "Badge immediately after title, before description"
+    channel: "README.md"
+    primary_metric: "github_stars_7d"
+    secondary_metrics: ["clone_rate", "fork_rate", "time_on_page"]
+    guardrails: ["bounce_rate"]
+    stop_rules:
+      - "If bounce_rate +20% vs A, revert"
+    effort: "5 minutes"
+
+  - id: EXP-BADGE-002
+    name: "Badge Design Variants"
+    principle: "Efficiency sabotage (ceremony creates trust)"
+    hypothesis: "More detailed badge (CSP Court-Grade PASS) outperforms minimal badge (CSP)"
+    variants:
+      A: "Simple: [CSP | PASS]"
+      B: "Detailed: [CSP Court-Grade | 22/22 tests | PASS]"
+      C: "Status: [CSP Conformant | Signed Receipts | Court-Grade]"
+    channel: "Badge SVG in README"
+    primary_metric: "badge_clicks"
+    secondary_metrics: ["time_to_conformance_page", "enterprise_inbound"]
+    effort: "30 minutes"
+
+  # =============================================================================
+  # ONBOARDING EXPERIMENTS
+  # =============================================================================
+
+  - id: EXP-ONBOARD-001
+    name: "Receipt Ceremony Addition"
+    principle: "Efficiency is not effectiveness"
+    hypothesis: "Adding visible 'Receipt minted' confirmation increases trust and completion"
+    variants:
+      A: "Standard: run tests, see PASS"
+      B: "Ceremony: run tests → 'Guardian verified' → 'Receipt minted: sha256:abc...' → PASS"
+    channel: "pytest output / CLI"
+    primary_metric: "time_to_second_session"
+    secondary_metrics: ["share_rate", "screenshot_mentions"]
+    guardrails: ["error_rate", "support_tickets"]
+    stop_rules:
+      - "If error_rate +10%, revert"
+    effort: "2 hours"
+
+  - id: EXP-ONBOARD-002
+    name: "Outlier-First Onboarding"
+    principle: "Never design for average"
+    hypothesis: "Security-engineer-specific quickstart outperforms generic quickstart"
+    variants:
+      A: "Generic: 'Run tests, see results'"
+      B: "Security-focused: 'Verify CRITICAL blocking, export conformance report for audit'"
+    channel: "README quickstart section"
+    primary_metric: "completion_rate_security_segment"
+    secondary_metrics: ["enterprise_inbound", "linkedin_shares"]
+    effort: "1 hour"
+
+  - id: EXP-ONBOARD-003
+    name: "Dangerous Default Messaging"
+    principle: "Dangerous default inversion"
+    hypothesis: "Emphasizing 'deny-by-default' as safety feature increases trust"
+    variants:
+      A: "Neutral: 'Configure policies for your tools'"
+      B: "Safety-first: 'Everything blocked until explicitly allowed. Your agent can't go rogue.'"
+    channel: "README + landing page"
+    primary_metric: "enterprise_demo_requests"
+    secondary_metrics: ["security_forum_mentions"]
+    effort: "30 minutes"
+
+  # =============================================================================
+  # MESSAGING EXPERIMENTS
+  # =============================================================================
+
+  - id: EXP-MSG-001
+    name: "Sell the Hole, Not the Drill"
+    principle: "Job-to-be-done reframing"
+    hypothesis: "Outcome language outperforms feature language"
+    variants:
+      A: "Feature: 'Cryptographic receipt chain with Ed25519 signatures'"
+      B: "Outcome: 'Proof you can show your boss when the agent does something unexpected'"
+      C: "Fear: 'When your agent deletes prod, you'll wish you had receipts'"
+    channel: "README tagline + Twitter"
+    primary_metric: "click_through_rate"
+    secondary_metrics: ["reply_rate", "quote_tweets"]
+    effort: "15 minutes"
+
+  - id: EXP-MSG-002
+    name: "Anti-Agent Positioning"
+    principle: "Logic makes you identical (differentiate)"
+    hypothesis: "Positioning against agents increases memorability"
+    variants:
+      A: "Neutral: 'Safety for AI agents'"
+      B: "Contrarian: 'Agents are apps. This is the law they run under.'"
+      C: "Provocative: 'Your agent framework doesn't care about safety. We do.'"
+    channel: "Twitter + README subtitle"
+    primary_metric: "memorability_survey"
+    secondary_metrics: ["quote_mentions", "controversy_engagement"]
+    guardrails: ["negative_sentiment_ratio"]
+    effort: "15 minutes"
+
+  - id: EXP-MSG-003
+    name: "Expectation Setting Rewrite"
+    principle: "Expectation is part of the product"
+    hypothesis: "Hard expectation-setting reduces wrong-fit issues"
+    variants:
+      A: "Soft: 'CSP helps make agents safer'"
+      B: "Hard: 'CSP is governance infrastructure for tool-using AI. If you want an agent framework, look elsewhere. If you want proof and accountability, you're home.'"
+    channel: "README first paragraph"
+    primary_metric: "issue_close_rate_wontfix"
+    secondary_metrics: ["time_to_first_contribution", "repeat_visitors"]
+    effort: "30 minutes"
+
+  # =============================================================================
+  # SOCIAL PROOF EXPERIMENTS
+  # =============================================================================
+
+  - id: EXP-SOCIAL-001
+    name: "Receipt Wall of Fame"
+    principle: "Social proof + proof porn"
+    hypothesis: "Public display of blocked commands increases trust"
+    variants:
+      A: "No public stats"
+      B: "README badge: 'X CRITICAL commands blocked this week'"
+      C: "Live feed page: anonymized blocked command receipts"
+    channel: "README + optional /blocked page"
+    primary_metric: "trust_survey_score"
+    secondary_metrics: ["page_views_blocked", "twitter_mentions"]
+    effort: "4 hours for C, 30 min for B"
+
+  - id: EXP-SOCIAL-002
+    name: "Court-Grade Aspiration"
+    principle: "Status through rigor"
+    hypothesis: "Framing court-grade as aspirational increases upgrade interest"
+    variants:
+      A: "Neutral tiers: Basic, Standard, Court-Grade"
+      B: "Aspirational: Basic (start here), Standard (production), Court-Grade (serious teams only)"
+      C: "Exclusive: Court-Grade requires application / design partner status"
+    channel: "IMPLEMENTORS.md + README"
+    primary_metric: "court_grade_inquiries"
+    secondary_metrics: ["design_partner_applications"]
+    effort: "1 hour"
+
+  # =============================================================================
+  # CONTENT EXPERIMENTS
+  # =============================================================================
+
+  - id: EXP-CONTENT-001
+    name: "Anti-Demo Demo"
+    principle: "Drama of prevention > boredom of success"
+    hypothesis: "Demo showing blocked dangerous command outperforms successful command demo"
+    variants:
+      A: "Success demo: 'Watch CSP approve a safe file read'"
+      B: "Block demo: 'Watch CSP stop rm -rf / in real-time'"
+    channel: "Loom / README GIF"
+    primary_metric: "watch_completion_rate"
+    secondary_metrics: ["share_rate", "comment_sentiment"]
+    effort: "2 hours"
+
+  - id: EXP-CONTENT-002
+    name: "CISO One-Pager"
+    principle: "Enterprise whisper network"
+    hypothesis: "Downloadable conformance report increases enterprise adoption"
+    variants:
+      A: "No downloadable artifact"
+      B: "PDF export: 'Download conformance report for your security team'"
+      C: "Signed PDF: 'Cryptographically signed conformance report'"
+    channel: "csp-validate CLI + docs"
+    primary_metric: "enterprise_inbound_mentions_report"
+    secondary_metrics: ["pdf_downloads", "email_forwards"]
+    effort: "4 hours for C"
+
+  # =============================================================================
+  # FRICTION EXPERIMENTS
+  # =============================================================================
+
+  - id: EXP-FRICTION-001
+    name: "Microcopy Butterfly"
+    principle: "Dare to be trivial"
+    hypothesis: "Single reassurance line at friction point increases completion"
+    variants:
+      A: "No reassurance"
+      B: "After install: 'You now have Guardian protection. Nothing runs without your policy.'"
+      C: "After first test: 'Receipt minted. This proof exists forever.'"
+    channel: "CLI output"
+    primary_metric: "completion_rate_step_3"
+    secondary_metrics: ["time_at_step", "dropoff_rate"]
+    effort: "15 minutes"
+
+  - id: EXP-FRICTION-002
+    name: "Nudge Default Test"
+    principle: "Choice architecture"
+    hypothesis: "Dry-run default ON reduces incidents without reducing completion"
+    variants:
+      A: "Dry-run OFF by default (execute immediately)"
+      B: "Dry-run ON by default (preview first, confirm to execute)"
+    channel: "Gateway default config"
+    primary_metric: "incident_rate"
+    secondary_metrics: ["task_completion_rate", "user_override_rate"]
+    guardrails: ["frustration_signals"]
+    effort: "1 hour"
+
+# =============================================================================
+# EXPERIMENT PRIORITY MATRIX
+# =============================================================================
+#
+# High Impact + Low Effort (DO FIRST):
+#   - EXP-BADGE-001 (5 min)
+#   - EXP-MSG-001 (15 min)
+#   - EXP-FRICTION-001 (15 min)
+#   - EXP-ONBOARD-003 (30 min)
+#
+# High Impact + Medium Effort:
+#   - EXP-ONBOARD-001 (2 hours)
+#   - EXP-CONTENT-001 (2 hours)
+#   - EXP-SOCIAL-001 variant B (30 min)
+#
+# High Impact + High Effort (VALIDATE FIRST):
+#   - EXP-CONTENT-002 variant C (4 hours)
+#   - EXP-SOCIAL-001 variant C (4 hours)
+#
+# =============================================================================
