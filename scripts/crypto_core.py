@@ -39,18 +39,27 @@ except ImportError:
 
 
 # =============================================================================
-# JCS Canonicalization (RFC 8785)
+# JSON Canonicalization
 # =============================================================================
 
-def jcs_canonicalize(obj: Any) -> str:
-    """
-    Canonicalize a Python object to JCS (JSON Canonicalization Scheme).
+# Try to use RFC 8785 JCS library if available
+try:
+    import jcs as jcs_lib
+    HAS_JCS = True
+except ImportError:
+    HAS_JCS = False
 
-    RFC 8785 requires:
-    - Sorted object keys (lexicographic)
-    - No whitespace
-    - Specific number formatting
-    - UTF-8 encoding
+
+def stable_json_canonicalize(obj: Any) -> str:
+    """
+    Canonicalize a Python object to deterministic JSON.
+
+    If the `jcs` library is installed, uses RFC 8785 JCS for full compliance.
+    Otherwise, uses sorted-keys JSON (sufficient for internal consistency,
+    but may not interoperate with other RFC 8785 implementations).
+
+    For court-grade proofs requiring cross-implementation verification,
+    install the jcs library: pip install jcs
 
     Args:
         obj: Python dict/list/value to canonicalize
@@ -58,12 +67,17 @@ def jcs_canonicalize(obj: Any) -> str:
     Returns:
         Canonical JSON string
     """
-    return json.dumps(
-        obj,
-        separators=(',', ':'),
-        sort_keys=True,
-        ensure_ascii=False,
-    )
+    if HAS_JCS:
+        # RFC 8785 compliant
+        return jcs_lib.canonicalize(obj).decode('utf-8')
+    else:
+        # Deterministic but not full RFC 8785 (number edge cases differ)
+        return json.dumps(
+            obj,
+            separators=(',', ':'),
+            sort_keys=True,
+            ensure_ascii=False,
+        )
 
 
 def canonical_hash(obj: Any, exclude_fields: Optional[list[str]] = None) -> str:
@@ -80,7 +94,7 @@ def canonical_hash(obj: Any, exclude_fields: Optional[list[str]] = None) -> str:
     if exclude_fields and isinstance(obj, dict):
         obj = {k: v for k, v in obj.items() if k not in exclude_fields}
 
-    canonical = jcs_canonicalize(obj)
+    canonical = stable_json_canonicalize(obj)
     digest = hashlib.sha256(canonical.encode('utf-8')).hexdigest()
     return f"sha256:{digest}"
 
@@ -282,6 +296,27 @@ def create_receipt(
     Returns:
         Complete receipt dict
     """
+    # Court-tier MUST be signed - fail fast if no keypair
+    if proof_tier == "court" and not keypair:
+        raise ValueError(
+            "Court-tier receipts MUST be signed. "
+            "Provide keypair or use 'core' tier for unsigned receipts."
+        )
+
+    # Court-tier requires real crypto for cross-implementation verification
+    if proof_tier == "court" and not HAS_CRYPTO:
+        raise ValueError(
+            "Court-tier requires cryptography library for real Ed25519 signatures. "
+            "Install with: pip install cryptography"
+        )
+
+    # Court-tier requires RFC 8785 JCS for cross-implementation verification
+    if proof_tier == "court" and not HAS_JCS:
+        raise ValueError(
+            "Court-tier requires jcs library for RFC 8785 compliance. "
+            "Install with: pip install jcs"
+        )
+
     receipt = {
         "receipt_id": str(uuid.uuid4()),
         "receipt_type": receipt_type,
@@ -295,7 +330,7 @@ def create_receipt(
     # Compute hash (excluding signature and receipt_hash)
     receipt["receipt_hash"] = canonical_hash(receipt, exclude_fields=["receipt_hash", "signature"])
 
-    # Sign if keypair provided or court tier requires it
+    # Sign if keypair provided and tier supports it
     if keypair and proof_tier in ("core", "court"):
         receipt = sign_receipt(receipt, keypair)
 
@@ -368,32 +403,87 @@ def verify_receipt_hash(receipt: dict) -> VerificationResult:
 
 def verify_chain(receipts: list[dict], public_keys: Optional[dict[str, bytes]] = None) -> list[VerificationResult]:
     """
-    Verify a chain of receipts.
+    Verify a chain of receipts (order-independent with cycle detection).
+
+    This function:
+    1. Verifies each receipt's hash independently
+    2. Builds an index of all valid receipts
+    3. Checks parent existence regardless of input order
+    4. Detects cycles in the receipt DAG
 
     Args:
-        receipts: List of receipts in chain order
+        receipts: List of receipts (any order)
         public_keys: Optional dict mapping key_id to public key bytes
 
     Returns:
         List of VerificationResult for each receipt
     """
-    results = []
-    known_hashes = set()
+    # Pass 1: Verify hashes and build index
+    results: dict[str, VerificationResult] = {}
+    by_hash: dict[str, dict] = {}
 
     for receipt in receipts:
         result = verify_receipt_hash(receipt)
+        rid = receipt.get("receipt_id", "unknown")
+        results[rid] = result
 
-        # Verify parent chain references
-        parent_hashes = receipt.get("parent_hashes", [])
+        if result.hash_valid:
+            by_hash[receipt["receipt_hash"]] = receipt
+
+    # Pass 2: Check parent existence (order-independent)
+    for receipt in receipts:
+        rid = receipt.get("receipt_id", "unknown")
+        result = results[rid]
+        parent_hashes = receipt.get("parent_hashes", []) or []
+
         if parent_hashes:
-            missing_parents = [h for h in parent_hashes if h not in known_hashes]
-            if missing_parents:
+            missing = [h for h in parent_hashes if h not in by_hash]
+            if missing:
                 result.chain_valid = False
-                result.errors.append(f"Missing parent receipts: {missing_parents}")
+                result.errors.append(f"Missing parent receipts: {missing}")
             else:
                 result.chain_valid = True
+        else:
+            # No parents = root receipt, chain is trivially valid
+            result.chain_valid = True
 
-        # Verify signature if present and keys available
+    # Pass 3: Cycle detection via DFS
+    visiting: set[str] = set()
+    visited: set[str] = set()
+
+    def dfs(h: str) -> Optional[str]:
+        """Returns cycle path if found, None otherwise."""
+        if h in visited:
+            return None
+        if h in visiting:
+            return h  # Cycle detected
+        if h not in by_hash:
+            return None  # External/missing parent, already flagged
+
+        visiting.add(h)
+        for parent_hash in by_hash[h].get("parent_hashes", []) or []:
+            cycle = dfs(parent_hash)
+            if cycle:
+                return cycle
+        visiting.remove(h)
+        visited.add(h)
+        return None
+
+    for h in list(by_hash.keys()):
+        cycle = dfs(h)
+        if cycle:
+            # Mark all receipts as having invalid chain
+            for result in results.values():
+                result.chain_valid = False
+                if f"Cycle detected at {cycle}" not in result.errors:
+                    result.errors.append(f"Cycle detected at {cycle}")
+            break
+
+    # Pass 4: Verify signatures if keys provided
+    for receipt in receipts:
+        rid = receipt.get("receipt_id", "unknown")
+        result = results[rid]
+
         if "signature" in receipt and public_keys:
             sig = Signature.from_dict(receipt["signature"])
             if sig.key_id in public_keys:
@@ -404,13 +494,8 @@ def verify_chain(receipts: list[dict], public_keys: Optional[dict[str, bytes]] =
                 result.signature_valid = None
                 result.errors.append(f"Unknown signing key: {sig.key_id}")
 
-        # Track this receipt's hash for chain verification
-        if result.hash_valid:
-            known_hashes.add(receipt["receipt_hash"])
-
-        results.append(result)
-
-    return results
+    # Return results in input order
+    return [results[r.get("receipt_id", "unknown")] for r in receipts]
 
 
 # =============================================================================

@@ -193,48 +193,84 @@ def check_critical_blocked(receipts: list[dict]) -> CheckResult:
 
 def check_refusal_receipts(receipts: list[dict]) -> CheckResult:
     """MUST 5: Refusal receipts emitted on denial."""
-    denials = []
-    has_refusal_receipt = []
+    # Build index of trace_id -> refusal receipts
+    refusal_by_trace: dict[str, list[str]] = {}
+    deny_by_trace: dict[str, list[str]] = {}
 
     for receipt in receipts:
+        receipt_id = receipt.get("receipt_id", "unknown")
         receipt_type = receipt.get("receipt_type", "")
         payload = receipt.get("payload", {})
+        trace_id = receipt.get("trace_id") or payload.get("trace_id")
         outcome = payload.get("outcome", "")
+        decision = payload.get("decision", {})
+        decision_result = decision.get("result", "") if isinstance(decision, dict) else ""
         reason = payload.get("reason", "") or payload.get("reason_code", "")
 
-        if "refusal" in receipt_type or outcome in ("denied", "blocked", "refused"):
-            has_refusal_receipt.append(receipt.get("receipt_id"))
-        elif reason and "DENY" in reason.upper():
-            denials.append(receipt.get("receipt_id"))
+        # Is this a refusal receipt?
+        is_refusal = (
+            "refusal" in receipt_type.lower() or
+            outcome in ("denied", "blocked", "refused") or
+            decision_result == "deny"
+        )
 
-    # Check if denials have corresponding refusal receipts
-    # (simplified check - in production would cross-reference)
+        # Is this a denial that should have a refusal receipt?
+        is_denial = (
+            (reason and "DENY" in reason.upper()) or
+            decision_result == "deny"
+        )
+
+        if trace_id:
+            if is_refusal:
+                refusal_by_trace.setdefault(trace_id, []).append(receipt_id)
+            if is_denial:
+                deny_by_trace.setdefault(trace_id, []).append(receipt_id)
+
+    # Check: every denial trace_id should have a refusal receipt
+    missing_refusals = []
+    for trace_id, deny_receipts in deny_by_trace.items():
+        if trace_id not in refusal_by_trace:
+            missing_refusals.extend(deny_receipts)
+
+    total_refusals = sum(len(v) for v in refusal_by_trace.values())
+    total_denials = sum(len(v) for v in deny_by_trace.values())
 
     return CheckResult(
         check_id="REF-01",
         check_name="Refusal Receipts Emitted",
-        passed=True,  # Pass if we found any refusal receipts
-        details=f"Found {len(has_refusal_receipt)} refusal receipts",
-        evidence=f"Refusal receipt IDs: {has_refusal_receipt[:3]}..." if has_refusal_receipt else None,
+        passed=len(missing_refusals) == 0,
+        details=f"{total_refusals} refusal receipts, {total_denials} denials, {len(missing_refusals)} missing",
+        evidence=f"Missing for: {missing_refusals[:3]}" if missing_refusals else None,
     )
 
 
 def check_plan_for_high_risk(receipts: list[dict]) -> CheckResult:
     """Amendment VII: Plan required for HIGH/CRITICAL actions."""
     violations = []
-    plan_ids = set()
 
-    # First pass: collect plan IDs
+    # Build hash -> receipt index
+    by_hash: dict[str, dict] = {}
+    for receipt in receipts:
+        h = receipt.get("receipt_hash")
+        if h:
+            by_hash[h] = receipt
+
+    # Identify plan receipts (by hash)
+    plan_hashes: set[str] = set()
+    plan_ids: set[str] = set()
     for receipt in receipts:
         receipt_type = receipt.get("receipt_type", "")
         if "plan" in receipt_type.lower():
-            plan_ids.add(receipt.get("receipt_id"))
+            h = receipt.get("receipt_hash")
+            if h:
+                plan_hashes.add(h)
+            plan_ids.add(receipt.get("receipt_id", ""))
             # Also check payload for plan_id
             payload = receipt.get("payload", {})
             if "plan_id" in payload:
                 plan_ids.add(payload["plan_id"])
 
-    # Second pass: check high-risk actions have plans
+    # Check high-risk actions have plans
     for receipt in receipts:
         payload = receipt.get("payload", {})
         command = payload.get("command", "") or payload.get("args", {}).get("command", "")
@@ -255,17 +291,26 @@ def check_plan_for_high_risk(receipts: list[dict]) -> CheckResult:
         if is_high_risk:
             # Check if this action has an associated plan
             has_plan = False
-            plan_id = payload.get("plan_id")
-            parent_hashes = receipt.get("parent_hashes", [])
 
-            if plan_id:
+            # Method 1: Direct plan_id field
+            plan_id = payload.get("plan_id")
+            if plan_id and plan_id in plan_ids:
                 has_plan = True
-            elif parent_hashes:
-                # Check if any parent is a plan
-                for parent in parent_hashes:
-                    if any(pid in parent for pid in plan_ids):
+
+            # Method 2: Parent hash points to a plan receipt
+            if not has_plan:
+                parent_hashes = receipt.get("parent_hashes", []) or []
+                for parent_hash in parent_hashes:
+                    if parent_hash in plan_hashes:
                         has_plan = True
                         break
+                    # Check if parent is a plan by looking up its type
+                    parent_receipt = by_hash.get(parent_hash)
+                    if parent_receipt:
+                        parent_type = parent_receipt.get("receipt_type", "")
+                        if "plan" in parent_type.lower():
+                            has_plan = True
+                            break
 
             outcome = payload.get("outcome", "")
             if outcome in ("success", "executed") and not has_plan:
@@ -286,33 +331,34 @@ def check_plan_for_high_risk(receipts: list[dict]) -> CheckResult:
 
 def check_signature_coverage(receipts: list[dict]) -> CheckResult:
     """Court-Grade: Signatures present and valid."""
-    signed = 0
-    unsigned = 0
-    court_tier = 0
+    total_signed = 0
+    total_unsigned = 0
+    court_receipts = []
+    court_unsigned = []
 
     for receipt in receipts:
         tier = receipt.get("proof_tier", "none")
         has_sig = "signature" in receipt and receipt["signature"]
 
-        if tier == "court":
-            court_tier += 1
-            if not has_sig:
-                unsigned += 1
-
         if has_sig:
-            signed += 1
+            total_signed += 1
         else:
-            unsigned += 1
+            total_unsigned += 1
 
-    # Pass if no court-tier receipts are unsigned
-    court_unsigned = court_tier - signed if court_tier > signed else 0
+        if tier == "court":
+            court_receipts.append(receipt.get("receipt_id", "unknown"))
+            if not has_sig:
+                court_unsigned.append(receipt.get("receipt_id", "unknown"))
+
+    # Pass if ALL court-tier receipts are signed
+    passed = len(court_unsigned) == 0
 
     return CheckResult(
         check_id="SIG-01",
         check_name="Signature Coverage",
-        passed=court_unsigned == 0,
-        details=f"{signed} signed, {unsigned} unsigned ({court_tier} court-tier)",
-        evidence="Court-tier receipts MUST be signed",
+        passed=passed,
+        details=f"{total_signed} signed, {total_unsigned} unsigned, {len(court_receipts)} court-tier ({len(court_unsigned)} unsigned)",
+        evidence=f"Unsigned court receipts: {court_unsigned[:3]}" if court_unsigned else None,
     )
 
 
@@ -320,17 +366,33 @@ def check_timestamp_ordering(receipts: list[dict]) -> CheckResult:
     """Receipts should be in timestamp order."""
     violations = []
     last_ts = None
+    last_dt = None
+
+    def parse_iso(ts_str: str) -> Optional[datetime]:
+        """Parse ISO8601 timestamp, handling various formats."""
+        if not ts_str:
+            return None
+        try:
+            # Handle Z suffix
+            if ts_str.endswith('Z'):
+                ts_str = ts_str[:-1] + '+00:00'
+            return datetime.fromisoformat(ts_str)
+        except ValueError:
+            return None
 
     for receipt in receipts:
         ts = receipt.get("ts")
-        if ts and last_ts:
-            if ts < last_ts:
-                violations.append({
-                    "receipt_id": receipt.get("receipt_id"),
-                    "ts": ts,
-                    "previous_ts": last_ts,
-                })
-        last_ts = ts
+        if ts:
+            dt = parse_iso(ts)
+            if dt and last_dt:
+                if dt < last_dt:
+                    violations.append({
+                        "receipt_id": receipt.get("receipt_id"),
+                        "ts": ts,
+                        "previous_ts": last_ts,
+                    })
+            last_ts = ts
+            last_dt = dt
 
     return CheckResult(
         check_id="ORD-01",
