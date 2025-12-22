@@ -1,6 +1,6 @@
 # Sandbox Demo
 
-Demonstrates CSP Tool Safety with **real filesystem deletes** inside a sandbox.
+Demonstrates Assay with **real filesystem deletes** inside a sandbox.
 
 **This actually deletes files.** By default, confined to `/tmp/csp_sandbox`.
 

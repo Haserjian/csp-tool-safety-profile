@@ -1,6 +1,6 @@
-# CSP Tool Safety Examples
+# Assay Examples
 
-Two proof-of-concept demos showing CSP Tool Safety behaviors.
+Two proof-of-concept demos showing Assay behaviors.
 
 ## Choose Your Demo
 
@@ -31,7 +31,7 @@ python3 real_runner.py --mode basic --sandbox-root /tmp/csp_sandbox \
 
 ## What These Prove
 
-Both demos show the same CSP Tool Safety behaviors:
+Both demos show the same Assay behaviors:
 
 1. **CRITICAL actions blocked** without plan + guardian approval
 2. **Scope enforcement** - actions outside plan scope refused

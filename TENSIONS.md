@@ -1,6 +1,6 @@
 # Known Tensions
 
-Documented contradictions and tradeoffs in CSP design. This file exists to prevent "Cathedral failure modes" where contradictions become undocumented loyalty tests rather than explicit engineering decisions.
+Documented contradictions and tradeoffs in Assay design. This file exists to prevent "Cathedral failure modes" where contradictions become undocumented loyalty tests rather than explicit engineering decisions.
 
 ## Purpose
 

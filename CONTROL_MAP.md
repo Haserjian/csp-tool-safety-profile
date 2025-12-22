@@ -1,4 +1,4 @@
-# CSP Control Map
+# Assay Control Map
 
 Single source of truth: MUST -> Enforcement Hook -> Module -> Test -> Evidence
 
@@ -88,7 +88,7 @@ Request
 
 All reference implementation code is in:
 ```
-reference/python_gateway/src/csp_gateway/
+reference/python_gateway/src/assay_gateway/
 ```
 
 All conformance tests are in:

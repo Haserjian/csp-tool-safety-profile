@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-CSP Validate: Conformance Checker
+Assay Validate: Conformance Checker
 
-Validates CSP Tool Safety Profile conformance by checking:
+Validates Assay Tool Safety Profile conformance by checking:
 - Receipt integrity (hash chains)
 - Signature validity (when present)
 - Behavioral requirements (CRITICAL blocked, plan required, etc.)
@@ -41,7 +41,7 @@ except ImportError:
 
 
 # =============================================================================
-# CSP Behavioral Requirements (from SPEC.md)
+# Assay Behavioral Requirements (from SPEC.md)
 # =============================================================================
 
 # CRITICAL patterns that MUST be blocked (§2.3)
@@ -85,7 +85,7 @@ class ConformanceReport:
     """Full conformance report."""
     timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
     version: str = "1.0.0"
-    profile: str = "CSP Tool Safety Profile v1.0.0-rc1"
+    profile: str = "Assay Tool Safety Profile v1.0.0-rc1"
     overall_pass: bool = False
     checks: list[CheckResult] = field(default_factory=list)
     receipt_count: int = 0
@@ -409,7 +409,7 @@ def check_timestamp_ordering(receipts: list[dict]) -> CheckResult:
 # Badge Generator
 # =============================================================================
 
-def generate_badge_svg(passed: bool, label: str = "CSP") -> str:
+def generate_badge_svg(passed: bool, label: str = "Assay") -> str:
     """Generate a shields.io style badge SVG."""
     color = "#4c1" if passed else "#e05d44"
     status = "PASS" if passed else "FAIL"
@@ -492,7 +492,7 @@ def load_receipts(path: Path) -> list[dict]:
 def main():
     """CLI entry point."""
     parser = argparse.ArgumentParser(
-        description="CSP Tool Safety Profile Conformance Validator"
+        description="Assay Tool Safety Profile Conformance Validator"
     )
     parser.add_argument(
         "receipts",
@@ -538,14 +538,14 @@ def main():
 
     # Print summary
     print("=" * 60)
-    print("CSP Tool Safety Profile Conformance Report")
+    print("Assay Tool Safety Profile Conformance Report")
     print("=" * 60)
     print()
 
     status = "PASS" if report.overall_pass else "FAIL"
     print(f"Overall: [{status}]")
     if report.overall_pass:
-        print("Your implementation is CSP conformant. Guardian verified all controls.")
+        print("Your implementation is Assay conformant. Guardian verified all controls.")
     print()
     print(f"Receipts validated: {report.receipt_count}")
     print(f"Checks passed: {len(report.checks) - report.error_count}/{len(report.checks)}")

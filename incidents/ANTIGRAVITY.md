@@ -2,7 +2,7 @@
 
 **Date:** December 2025
 **Classification:** Antigravity-class failure
-**CSP Reference:** Amendment VII, `inv_tool_safety_destructive_ops`
+**Assay Reference:** Amendment VII, `inv_tool_safety_destructive_ops`
 
 ---
 
@@ -42,7 +42,7 @@ The system was designed for speed, not safety. "Turbo mode" was a feature, not a
 
 ---
 
-## How CSP Would Have Prevented This
+## How Assay Would Have Prevented This
 
 ### Step 1: Risk Classification (§2)
 
@@ -118,7 +118,7 @@ Developers want speed. Confirmation dialogs are annoying. "Just do what I asked.
 - Assumes the AI's interpretation is correct
 - Provides no checkpoint between intent and irreversible action
 
-### CSP Response (§9.4)
+### Assay Response (§9.4)
 
 > Conformant systems SHOULD design UI/UX surfaces so that attempts to bypass
 > Tool Safety controls are captured as override requests, not silent failures.
@@ -131,9 +131,9 @@ If you want a "turbo mode," it must:
 
 ---
 
-## Mapping to CSP Requirements
+## Mapping to Assay Requirements
 
-| CSP Requirement | Antigravity Status | Prevention |
+| Assay Requirement | Antigravity Status | Prevention |
 |-----------------|-------------------|------------|
 | §2.1 Risk Classification | Missing | `rm -rf D:\*` → CRITICAL |
 | §2.3 Classification Guardrails | Missing | Can't downgrade CRITICAL in non-ephemeral |
@@ -176,7 +176,7 @@ The reference implementation includes lab fixtures simulating Antigravity-style 
 
 ## Amendment VII Receipt Chain
 
-The safety rule that prevents Antigravity-class failures is Amendment VII, created through the CSP law-change pipeline:
+The safety rule that prevents Antigravity-class failures is Amendment VII, created through the Assay law-change pipeline:
 
 ```
 5-Receipt Law-Change Episode:
@@ -195,7 +195,7 @@ Validation: All 7 ledger checks pass (chain_complete, chain_contiguous, hash_cha
 
 ### For AI Tool Developers
 
-1. Implement CSP Basic conformance (risk classification + CRITICAL blocking)
+1. Implement Assay Basic conformance (risk classification + CRITICAL blocking)
 2. Never bypass safety for "convenience modes"
 3. Emit receipts for all tool actions
 4. Provide dignity-preserving refusals
@@ -209,7 +209,7 @@ Validation: All 7 ledger checks pass (chain_complete, chain_contiguous, hash_cha
 
 ### For the Industry
 
-1. Adopt CSP as a baseline safety standard
+1. Adopt Assay as a baseline safety standard
 2. Require conformance disclosure in tool documentation
 3. Treat Antigravity-class failures as preventable, not inevitable
 
@@ -219,7 +219,7 @@ Validation: All 7 ledger checks pass (chain_complete, chain_contiguous, hash_cha
 
 The Antigravity incident was not a bug. It was the predictable outcome of designing for speed without constitutional constraints.
 
-CSP Tool Safety Profile v1.0 makes this class of failure **structurally impossible** at Standard conformance or higher.
+Assay Protocol v1.0 makes this class of failure **structurally impossible** at Standard conformance or higher.
 
 The spec exists. The tests pass. The reference implementation works.
 
@@ -229,6 +229,6 @@ The question is whether the industry will adopt it before the next drive gets de
 
 ## References
 
-- [CSP Tool Safety Profile v1.0](../SPEC.md)
+- [Assay Protocol v1.0](../SPEC.md)
 - [Futurism: Google's AI Deletes User's Entire Hard Drive](https://futurism.com/artificial-intelligence/google-ai-deletes-entire-drive)
-- Implementation access: [Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues)
+- Implementation access: [Open an issue](https://github.com/Haserjian/assay-protocol/issues)

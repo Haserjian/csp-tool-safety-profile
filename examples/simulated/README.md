@@ -1,6 +1,6 @@
 # Simulated Demo
 
-Demonstrates CSP Tool Safety behaviors **without executing any real commands**.
+Demonstrates Assay behaviors **without executing any real commands**.
 
 Safe to run anywhere - no filesystem changes, no network calls, no side effects.
 
@@ -52,7 +52,7 @@ python3 -m pytest test_classifier.py -v
 | `demo.py` | Main demo runner (4 scenarios) |
 | `verify_episode.py` | Receipt chain verifier |
 | `test_classifier.py` | Unit tests for risk classification |
-| `csp_demo/tool_safety.py` | Core CSP logic (classification, receipts, enforcement) |
+| `assay_demo/tool_safety.py` | Core Assay logic (classification, receipts, enforcement) |
 
 ## Limitations
 

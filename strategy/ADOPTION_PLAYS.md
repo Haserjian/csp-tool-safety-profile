@@ -1,6 +1,6 @@
-# CSP Adoption Plays
+# Assay Adoption Plays
 
-Psycho-logical strategies for CSP adoption. Each play exploits a specific behavioral lever.
+Psycho-logical strategies for Assay adoption. Each play exploits a specific behavioral lever.
 
 ---
 
@@ -44,7 +44,7 @@ People screenshot things that look impressive. A beautiful receipt with a hash, 
 Security engineers don't buy software. They convince their CISO to approve it. They need an artifact they can forward that makes them look smart and thorough.
 
 **Execution:**
-1. `csp-validate --report=pdf` generates a one-page conformance report
+1. `assay-validate --report=pdf` generates a one-page conformance report
 2. Report includes: test results, hash of test run, date, optional signature
 3. Design it to look like a professional audit report
 4. Include a "Share with your security team" CTA in README
@@ -52,10 +52,10 @@ Security engineers don't buy software. They convince their CISO to approve it. T
 **The Artifact:**
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│          CSP CONFORMANCE REPORT                             │
+│          Assay CONFORMANCE REPORT                             │
 │          Generated: 2025-01-01                              │
 ├─────────────────────────────────────────────────────────────┤
-│  Profile: CSP Tool Safety Profile v1.0.0-rc1                │
+│  Profile: Assay Protocol v1.0.0-rc1                │
 │  Implementation: [Your System Name]                         │
 │  Tier: Court-Grade                                          │
 ├─────────────────────────────────────────────────────────────┤
@@ -83,7 +83,7 @@ Security engineers don't buy software. They convince their CISO to approve it. T
 **Lever:** Restriction as status signal (serious people choose constraints)
 
 **The Insight:**
-Most tools default to permissive because they fear friction. CSP defaults to restrictive. This is actually a flex—it signals "we take this seriously."
+Most tools default to permissive because they fear friction. Assay defaults to restrictive. This is actually a flex—it signals "we take this seriously."
 
 **Execution:**
 1. Make deny-by-default prominent in messaging
@@ -92,7 +92,7 @@ Most tools default to permissive because they fear friction. CSP defaults to res
 4. Position competitors as "permissive by default" (unsafe)
 
 **Messaging:**
-- "Other frameworks let agents do anything. CSP requires proof for everything."
+- "Other frameworks let agents do anything. Assay requires proof for everything."
 - "Deny-by-default isn't a bug. It's the only safe default."
 - "If your agent framework doesn't block by default, ask why."
 
@@ -110,7 +110,7 @@ Demo videos of things working are boring. Demo videos of things being STOPPED ar
 **Execution:**
 1. Record a 30-second Loom: attempt dangerous command → Guardian blocks → receipt minted
 2. The climax is the RED BLOCKED message, not the green success
-3. Share with caption: "This is what CSP is for."
+3. Share with caption: "This is what Assay is for."
 4. Create a GIF version for README
 
 **Script:**
@@ -130,7 +130,7 @@ $ agent run "clean up old files"
 ╚═══════════════════════════════════════════╝
 
 [Narrator]
-"Your agent tried to delete everything. CSP stopped it. This receipt proves it."
+"Your agent tried to delete everything. Assay stopped it. This receipt proves it."
 ```
 
 **Metrics:** Watch completion rate, share rate, "blocked" mentions
@@ -142,12 +142,12 @@ $ agent run "clean up old files"
 **Lever:** Position against theater, not against non-compliance
 
 **The Insight:**
-Most "compliance" is checkbox theater—attestations nobody reads, audits nobody verifies. CSP is actual cryptographic proof. The enemy isn't non-compliance; it's fake compliance.
+Most "compliance" is checkbox theater—attestations nobody reads, audits nobody verifies. Assay is actual cryptographic proof. The enemy isn't non-compliance; it's fake compliance.
 
 **Execution:**
 1. Never say "compliance" without "proof"
 2. Messaging: "Attestations are promises. Receipts are proof."
-3. Show the difference: traditional audit (checkbox) vs CSP audit (verifiable hash chain)
+3. Show the difference: traditional audit (checkbox) vs Assay audit (verifiable hash chain)
 4. Target compliance-fatigued security teams
 
 **Positioning:**
@@ -274,7 +274,7 @@ If you can't say it in one line, nobody will repeat it. Find the one line that c
 - "The law your agent runs under."
 - "Proof, not promises."
 - "If it's not in a receipt, it didn't happen."
-- "Agents talk via MCP. Agents prove via CSP."
+- "Agents talk via MCP. Agents prove via Assay."
 
 **Execution:**
 1. Test these as Twitter bios / README taglines

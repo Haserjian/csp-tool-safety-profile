@@ -16,7 +16,7 @@ Tracking adoption experiments with receipts and metrics.
 |----------|---------------------|---------------------|
 | README tagline | "Safety controls for AI agents" | "Proof your agent didn't go rogue" |
 | README subtitle | "Reference implementation + conformance tests" | "When your agent does something unexpected, you'll wish you had receipts" |
-| Twitter bio | TBD | "Agents talk via MCP. Agents prove via CSP." |
+| Twitter bio | TBD | "Agents talk via MCP. Agents prove via Assay." |
 
 ### Baseline Metrics (Pre-experiment)
 
@@ -106,7 +106,7 @@ See: `examples/anti_demo/` (created below)
 1. Agent attempts `rm -rf /var/log/old`
 2. Guardian intercepts with dramatic RED block
 3. Receipt minted with hash
-4. Narrator: "Your agent tried. CSP stopped it. Here's your proof."
+4. Narrator: "Your agent tried. Assay stopped it. Here's your proof."
 
 ### Hypothesis
 Demo showing blocked dangerous command outperforms successful command demo.

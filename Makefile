@@ -24,7 +24,7 @@ test:
 	cd $(GATEWAY_DIR) && $(PYTEST) tests/ -v
 
 test-cov:
-	cd $(GATEWAY_DIR) && $(PYTEST) tests/ -v --cov=src/csp_gateway --cov-report=term-missing
+	cd $(GATEWAY_DIR) && $(PYTEST) tests/ -v --cov=src/assay_gateway --cov-report=term-missing
 
 lint:
 	cd $(GATEWAY_DIR) && ruff check src/ tests/

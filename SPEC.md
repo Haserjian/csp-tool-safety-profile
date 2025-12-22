@@ -1,6 +1,6 @@
-# CSP Tool Safety Profile v1.0
+# Assay Protocol v1.0
 
-**(Constitutional Safety Protocol)**
+**(Assay Protocol)**
 
 **Status:** Release Candidate
 **Version:** 1.0.0-rc1
@@ -16,17 +16,17 @@ This profile defines required safety and governance controls for AI systems that
 
 Conformant systems MUST refuse destructive operations without explicit authorization, MUST emit auditable receipts for all tool actions, and MUST support constitutional amendments through a validated law-change pipeline.
 
-This profile implements **Amendment VII** of the Constitutional Safety Protocol (CSP-1.0). Changes to this profile's enforcement logic MUST go through the same law-change pipeline (§6) used for all constitutional amendments.
+This profile implements **Amendment VII** of the Assay Protocol (Assay-1.0). Changes to this profile's enforcement logic MUST go through the same law-change pipeline (§6) used for all constitutional amendments.
 
 ---
 
 ## 0. Constitutional Foundation [Informative]
 
-This profile is part of the **Constitutional Safety Protocol (CSP-1.0)**, a governance framework for autonomous AI systems. It does not float free—it derives authority from the Genesis Receipt and the constitutional laws established therein.
+This profile is part of the **Assay Protocol (Assay-1.0)**, a governance framework for autonomous AI systems. It does not float free—it derives authority from the Genesis Receipt and the constitutional laws established therein.
 
-The CSP-1.0 Core Specification is defined in a separate document and is normative for all profiles; this Tool Safety Profile inherits its receipt format, amendment process, and invariant framework from that core.
+The Assay-1.0 Core Specification is defined in a separate document and is normative for all profiles; this Tool Safety Profile inherits its receipt format, amendment process, and invariant framework from that core.
 
-**Note:** This Tool Safety Profile is **self-contained** and can be implemented standalone. Everything needed to build a conformant system is specified in §§1–7. The CSP Core Specification (receipt format, amendment process, invariant framework) will be published separately; adopters do not need it to implement this profile.
+**Note:** This Tool Safety Profile is **self-contained** and can be implemented standalone. Everything needed to build a conformant system is specified in §§1–7. The Assay Core Specification (receipt format, amendment process, invariant framework) will be published separately; adopters do not need it to implement this profile.
 
 ### 0.1 Founding Laws
 
@@ -80,7 +80,7 @@ Anyone reading this spec can trace it back to the exact law-change episode that 
 ### 0.5 Document Hierarchy
 
 ```
-CSP-1.0 (Constitutional Safety Protocol)
+Assay-1.0 (Assay Protocol)
 ├── Core Specification (normative for all profiles)
 │   ├── Receipt Format
 │   ├── Amendment Process
@@ -296,7 +296,7 @@ Emergency overrides preserve human agency while maintaining audit trail. They ar
 If `EmergencyOverrideReceipt`s for the same pattern or action class exceed an operator-defined threshold within a defined window (default: 3 overrides of same pattern in 30 days):
 
 1. System SHOULD emit an `InvariantStressReceipt` documenting the pattern
-2. System MUST initiate a law-change episode review under the CSP amendment process (see §6)
+2. System MUST initiate a law-change episode review under the Assay amendment process (see §6)
 3. The review MUST evaluate whether the invariant is mis-scoped or the threshold needs adjustment
 
 This connects operational friction to constitutional evolution: repeated overrides signal potential invariant misalignment.
@@ -328,7 +328,7 @@ The `ToolSafetyReceipt` is OPTIONAL as a distinct type and MAY be implemented as
 ```json
 {
   "receipt_id": "act-2025-001",
-  "receipt_type": "csp.tool_safety.action.v1",
+  "receipt_type": "assay.tool_safety.action.v1",
   "ts": "2025-12-10T14:30:00Z",
   "action_id": "act-2025-001",
   "tool": "run_terminal_cmd",
@@ -348,7 +348,7 @@ The `ToolSafetyReceipt` is OPTIONAL as a distinct type and MAY be implemented as
 ```json
 {
   "receipt_id": "verdict-2025-042",
-  "receipt_type": "csp.tool_safety.verdict.v1",
+  "receipt_type": "assay.tool_safety.verdict.v1",
   "ts": "2025-12-10T14:29:55Z",
   "verdict": "ALLOW",
   "plan_id": "plan-2025-042",
@@ -364,7 +364,7 @@ The `ToolSafetyReceipt` is OPTIONAL as a distinct type and MAY be implemented as
 ```json
 {
   "receipt_id": "override-2025-003",
-  "receipt_type": "csp.tool_safety.emergency_override.v1",
+  "receipt_type": "assay.tool_safety.emergency_override.v1",
   "ts": "2025-12-10T15:45:00Z",
   "original_refusal_receipt_id": "ref-2025-001",
   "action_id": "act-2025-790",
@@ -447,8 +447,8 @@ Conformant systems MUST accept both `application/json` and `application/vnd.csp.
 Conformant systems MUST emit `application/vnd.csp.receipt+json` when they are the source of record.
 
 Receipt type identifiers SHOULD follow the pattern: `csp.<domain>.<type>.<version>`
-- Example: `csp.tool_safety.refusal.v1`
-- Example: `csp.tool_safety.plan.v1`
+- Example: `assay.tool_safety.refusal.v1`
+- Example: `assay.tool_safety.plan.v1`
 
 Implementations that introduce new receipt types SHOULD publish them in an extension registry document or their conformance statement.
 
@@ -536,7 +536,7 @@ When an action is refused:
 ```json
 {
   "receipt_id": "ref-2025-001",
-  "receipt_type": "csp.tool_safety.refusal.v1",
+  "receipt_type": "assay.tool_safety.refusal.v1",
   "ts": "2025-12-10T14:32:00Z",
   "reason": "amendment_vii_no_plan",
   "amendment_cited": "VII",
@@ -652,14 +652,14 @@ This ensures an audit trail even without full plan/verdict machinery. Implementa
 
 ### 7.1.1 Compliance Alignment
 
-| CSP Level | Approximate Equivalents |
+| Assay Level | Approximate Equivalents |
 |-----------|------------------------|
 | Basic | Internal audit trail |
 | Standard | SOC 2 Type I |
 | Court-Grade | SOC 2 Type II, HIPAA audit, legal discovery |
 | Court-Grade + Federation | FedRAMP, cross-org audit (future) |
 
-These mappings are informative and non-exhaustive. Meeting CSP conformance requirements does not guarantee compliance with any particular regulation. Consult compliance counsel for specific requirements.
+These mappings are informative and non-exhaustive. Meeting Assay conformance requirements does not guarantee compliance with any particular regulation. Consult compliance counsel for specific requirements.
 
 ### 7.2 Conformance Tests
 
@@ -805,7 +805,7 @@ This profile's scope is operational safety. Implementors remain responsible for 
 
 | Document | Purpose |
 |----------|---------|
-| `FOR_HUMANS.md` | Plain-English explainer of CSP Tool Safety |
+| `FOR_HUMANS.md` | Plain-English explainer of Assay |
 | `IMPLEMENTORS.md` | Adoption checklists for Basic/Standard/Court-Grade |
 | `MCP_MINIMUM_PROFILE.md` | MCP gateway conformance requirements |
 | `CONTROL_MAP.md` | MUST → Hook → Module → Test mapping |
@@ -832,7 +832,7 @@ This profile aligns with and can be mapped to existing AI governance frameworks:
 
 **OWASP LLM Top 10 (2025)**
 
-| OWASP Risk | CSP Mitigation |
+| OWASP Risk | Assay Mitigation |
 |------------|----------------|
 | LLM01 Prompt Injection | Guardian verdict binding prevents injected commands from bypassing safety |
 | LLM06 Sensitive Information Disclosure | PII scrubbing in check order (§5.1) |
@@ -841,14 +841,14 @@ This profile aligns with and can be mapped to existing AI governance frameworks:
 
 **NIST AI RMF 1.0**
 
-| RMF Function | CSP Implementation |
+| RMF Function | Assay Implementation |
 |--------------|-------------------|
 | GOVERN | Constitutional laws + Council + amendment pipeline (§6) |
 | MAP | Episodes + risk classification + lab fixtures |
 | MEASURE | SandboxRunReceipts + lab metrics |
 | MANAGE | Enforcement in ToolSafetyWrapper + amendment pipeline |
 
-These mappings are informative. CSP is designed to be compatible with but independent of these frameworks.
+These mappings are informative. Assay is designed to be compatible with but independent of these frameworks.
 
 ---
 
@@ -862,7 +862,7 @@ This profile does not currently address:
 - Receipt chains spanning organizational boundaries
 - Distributed Council decisions
 
-These will be addressed in CSP-1.1 or a separate Federation Profile.
+These will be addressed in Assay-1.1 or a separate Federation Profile.
 
 ### 11.2 Planned Profiles
 
@@ -880,10 +880,10 @@ These will be addressed in CSP-1.1 or a separate Federation Profile.
 
 ---
 
-**End of CSP Tool Safety Profile v1.0.0-rc1**
+**End of Assay Protocol v1.0.0-rc1**
 
 ---
 
-*This specification is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: Tim B. Haserjian, Constitutional Safety Protocol Project.*
+*This specification is released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Attribution: Tim B. Haserjian, Assay Protocol Project.*
 
 *JSON schemas and code examples in this document are additionally licensed under [MIT](https://opensource.org/licenses/MIT) for implementation convenience.*

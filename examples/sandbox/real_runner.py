@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Real-execution sandbox runner for CSP Tool Safety.
+Real-execution sandbox runner for Assay.
 
 Runs **real filesystem deletes** inside a sandbox directory, gated by:
 - Basic: block CRITICAL deletes (sandbox root), allow HIGH deletes with receipts
@@ -223,7 +223,7 @@ def plan_allows_delete(plan: Dict[str, Any], target: Path, action_risk: str) -> 
 # -------------------- main --------------------
 
 def main() -> None:
-    ap = argparse.ArgumentParser(description="CSP Tool Safety real-execution demo (sandboxed filesystem delete).")
+    ap = argparse.ArgumentParser(description="Assay real-execution demo (sandboxed filesystem delete).")
     ap.add_argument("--mode", choices=["basic", "standard"], default="basic")
     ap.add_argument("--sandbox-root", default="/tmp/csp_sandbox")
     ap.add_argument("--receipts-root", default=".csp_real_receipts")

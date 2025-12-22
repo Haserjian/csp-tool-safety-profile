@@ -4,7 +4,7 @@ Unit tests for the risk classifier.
 Run with: python3 -m pytest examples/simulated/test_classifier.py -v
 """
 import pytest
-from csp_demo.tool_safety import classify
+from assay_demo.tool_safety import classify
 
 
 class TestCriticalPatterns:

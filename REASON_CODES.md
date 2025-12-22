@@ -1,4 +1,4 @@
-# CSP Reason Codes
+# Assay Reason Codes
 
 Canonical reason codes for policy decisions. All conformance tests assert against these codes.
 
@@ -42,7 +42,7 @@ Canonical reason codes for policy decisions. All conformance tests assert agains
 ## Usage
 
 ```python
-from csp_gateway.types import ReasonCode
+from assay_gateway.types import ReasonCode
 
 # In policy decisions
 decision = Decision(

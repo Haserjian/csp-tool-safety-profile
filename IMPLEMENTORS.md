@@ -1,6 +1,6 @@
-# CSP Tool Safety Profile v1.0 – Implementors Guide
+# Assay Protocol v1.0 – Implementors Guide
 
-Use this as a checklist. If you can check every box in your chosen tier, you can honestly claim **CSP Tool Safety–conformant**.
+Use this as a checklist. If you can check every box in your chosen tier, you can honestly claim **Assay–conformant**.
 
 You can enforce these checks inside your agent runtime or via a "tool safety wrapper"/sidecar; the profile only cares that every Tool Action goes through this logic.
 
@@ -167,4 +167,4 @@ PYTHONPATH=src pytest tests/ -v
 
 ---
 
-*For conformance questions or testing against the reference suite, [open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues).*
+*For conformance questions or testing against the reference suite, [open an issue](https://github.com/Haserjian/assay-protocol/issues).*

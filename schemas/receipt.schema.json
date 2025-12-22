@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://github.com/Haserjian/csp-tool-safety-profile/schemas/receipt.schema.json",
-  "title": "CSP MCP Gateway Receipt",
+  "title": "Assay MCP Gateway Receipt",
   "description": "Minimum required fields for MCP gateway conformance receipts",
   "type": "object",
   "required": ["ts", "receipt_id", "trace_id", "principal", "mcp", "decision", "token_handling"],

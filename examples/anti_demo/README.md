@@ -1,8 +1,8 @@
-# CSP Anti-Demo
+# Assay Anti-Demo
 
 > Drama of prevention > boredom of success.
 
-This demo shows CSP **blocking** a dangerous command, not approving a safe one.
+This demo shows Assay **blocking** a dangerous command, not approving a safe one.
 
 ## Run It
 
@@ -33,7 +33,7 @@ agg demo.cast demo.gif
 4. Action **BLOCKED** - no approved plan
 5. Receipt minted with hash
 
-**Punchline:** "Your agent tried. CSP stopped it. Here's your proof."
+**Punchline:** "Your agent tried. Assay stopped it. Here's your proof."
 
 ## Why This Works
 

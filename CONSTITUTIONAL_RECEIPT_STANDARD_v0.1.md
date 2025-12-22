@@ -11,7 +11,7 @@
 
 The Constitutional Receipt Standard (CRS) defines a portable, cryptographically verifiable format for recording and proving AI agent tool actions. CRS receipts are deterministically hashable, chain-verifiable, and optionally anchorable to external transparency logs.
 
-**Scope:** CRS defines the *portable proof format*. Profiles (e.g., CSP Tool Safety) define *what must be proven*.
+**Scope:** CRS defines the *portable proof format*. Profiles (e.g., Assay) define *what must be proven*.
 
 ---
 
@@ -250,9 +250,9 @@ CRS itself defines mechanics. Profiles define policy.
 
 ### 10.3 Example Profile Binding
 
-CSP Tool Safety Profile binds to CRS:
+Assay Protocol binds to CRS:
 
-| CSP Requirement | CRS Binding |
+| Assay Requirement | CRS Binding |
 |-----------------|-------------|
 | Refusal receipt on denial | `receipt_type: csp.refusal/v1` |
 | Plan required for CRITICAL | `receipt_type: csp.tool_plan/v1` with Guardian verdict |
@@ -305,7 +305,7 @@ Future versions may register:
 ### 13.2 Informative References
 
 - [Sigstore Rekor](https://docs.sigstore.dev/logging/overview/) — Transparency log for signed metadata
-- [CSP Tool Safety Profile](./SPEC.md) — Example profile binding
+- [Assay Protocol](./SPEC.md) — Example profile binding
 
 ---
 

@@ -1,4 +1,4 @@
-# CSP Tool Safety Profile — MCP Gateway Enforcement Map v0.1
+# Assay Protocol — MCP Gateway Enforcement Map v0.1
 
 **Purpose:** Maps each MUST from MCP_MINIMUM_PROFILE.md to specific MCP hooks, sample enforcement code patterns, and conformance test assertions.
 
@@ -14,7 +14,7 @@
                             │ MCP Request
                             ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│                     CSP GATEWAY LAYER                            │
+│                     Assay GATEWAY LAYER                            │
 │  ┌─────────────┐  ┌──────────────┐  ┌─────────────────────────┐ │
 │  │ MUST 2      │  │ MUST 3       │  │ MUST 1                  │ │
 │  │ AuthN/TLS   │→ │ tools/list   │→ │ Registry + Trust Levels │ │
@@ -586,4 +586,4 @@ assert receipt.decision.reason_codes == ["kill_switch"]
 
 ---
 
-*CSP Tool Safety Profile — MCP Gateway Enforcement Map v0.1*
+*Assay Protocol — MCP Gateway Enforcement Map v0.1*

@@ -1,4 +1,4 @@
-"""Core types for CSP MCP Gateway."""
+"""Core types for Assay MCP Gateway."""
 
 import hashlib
 import uuid

@@ -158,7 +158,7 @@ class Episode:
 
 # -------------------- tool safety wrapper (demo-grade) --------------------
 
-class CSPToolSafetyDemo:
+class AssayDemo:
     """
     Demo-grade Tool Safety Wrapper.
     - Does NOT execute real commands.

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""RitualLint: Prevent Cathedral failure modes in CSP.
+"""RitualLint: Prevent Cathedral failure modes in Assay.
 
 The Three Laws as Lint Rules:
   L1 - PasswordLint: Every slogan must cash out into a test
@@ -191,7 +191,7 @@ def lint_myth_rule(repo_root: Path, control_map: dict) -> list[str]:
             module_names = [module_name]
 
         for mod in module_names:
-            module_path = repo_root / "reference/python_gateway/src/csp_gateway" / mod
+            module_path = repo_root / "reference/python_gateway/src/assay_gateway" / mod
             if not module_path.exists():
                 errors.append(f"L2-MYTH: Module '{mod}' declared for {must['id']} does not exist")
 

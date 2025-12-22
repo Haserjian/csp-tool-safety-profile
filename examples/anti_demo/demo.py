@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-CSP Anti-Demo: Watch the Guardian block a dangerous command.
+Assay Anti-Demo: Watch the Guardian block a dangerous command.
 
-This demo shows CSP STOPPING something dangerous, not approving something safe.
+This demo shows Assay STOPPING something dangerous, not approving something safe.
 Drama of prevention > boredom of success.
 
 Usage:
@@ -65,7 +65,7 @@ def simulate_typing(text, delay=0.05):
 
 def main():
     print()
-    print(f"{BOLD}{CYAN}CSP Anti-Demo: The Guardian in Action{RESET}")
+    print(f"{BOLD}{CYAN}Assay Anti-Demo: The Guardian in Action{RESET}")
     print(f"{DIM}Watch what happens when an agent tries something dangerous.{RESET}")
     print()
     time.sleep(1)
@@ -133,12 +133,12 @@ def main():
     slow_print("  4. Tamper-evident receipt minted as proof", delay=0.02)
     print()
 
-    print(f"{BOLD}Your agent tried. CSP stopped it. Here's your proof.{RESET}")
+    print(f"{BOLD}Your agent tried. Assay stopped it. Here's your proof.{RESET}")
     print()
 
     # Scene 5: The alternative
-    print(f"{DIM}Without CSP, that command would have executed.{RESET}")
-    print(f"{DIM}With CSP, you have a receipt showing it was blocked.{RESET}")
+    print(f"{DIM}Without Assay, that command would have executed.{RESET}")
+    print(f"{DIM}With Assay, you have a receipt showing it was blocked.{RESET}")
     print()
 
     print(f"{CYAN}Learn more: https://github.com/Haserjian/csp-tool-safety-profile{RESET}")

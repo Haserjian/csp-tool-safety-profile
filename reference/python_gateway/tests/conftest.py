@@ -8,8 +8,8 @@ import pytest
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from csp_gateway.gateway import GatewayConfig, MCPGateway
-from csp_gateway.types import TrustLevel
+from assay_gateway.gateway import GatewayConfig, MCPGateway
+from assay_gateway.types import TrustLevel
 
 
 @pytest.fixture

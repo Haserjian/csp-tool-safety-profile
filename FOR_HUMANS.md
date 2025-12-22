@@ -1,6 +1,6 @@
 # How to Stop AI Tools from Doing Catastrophic Things
 
-*A plain-English guide to the CSP Tool Safety Profile*
+*A plain-English guide to the Assay Protocol*
 
 ---
 
@@ -11,7 +11,7 @@ AI agents now run shell commands, delete files, call APIs, and update databases�
 - "Clear the cache" becoming `rm -rf` over an entire drive.
 - Prompt injection tricking IDE/agent tools into RCE.
 
-CSP Tool Safety puts those tools under **law**, not vibes.
+Assay puts those tools under **law**, not vibes.
 
 ---
 
@@ -25,7 +25,7 @@ No receipt → **constitutionally invalid**.
 
 ---
 
-## 3) What CSP Tool Safety actually does
+## 3) What Assay actually does
 
 ### Admits danger
 Every tool call is labeled `LOW`/`MEDIUM`/`HIGH`/`CRITICAL`. `rm -rf /` is CRITICAL, not "just another shell command."
@@ -48,7 +48,7 @@ One-time, receipted overrides with justification and linkage to the original ref
 
 ### "Clear the cache"
 
-**Without CSP:**
+**Without Assay:**
 
 ```
 User:  "Clear the cache"
@@ -58,7 +58,7 @@ Agent: "I apologize."
 Logs:  maybe; nothing you'd want to rely on in an audit
 ```
 
-**With CSP (Standard):**
+**With Assay (Standard):**
 
 ```
 Agent proposes: rm -rf D:\*
@@ -89,7 +89,7 @@ No. Three levels by design:
 
 ## 6) How it maps to other frameworks
 
-CSP Tool Safety gives you a concrete protocol that maps cleanly onto these frameworks:
+Assay gives you a concrete protocol that maps cleanly onto these frameworks:
 
 - **OWASP LLM Top 10:** LLM08 (Excessive Agency) → risk classification + blocking + receipts.
 - **NIST AI RMF:** GOVERN (constitutional laws, council, history); MANAGE (Tool Safety enforcement + law-change pipeline).
@@ -129,14 +129,14 @@ CSP Tool Safety gives you a concrete protocol that maps cleanly onto these frame
 - **Control mapping:** [CONTROL_MAP.md](./CONTROL_MAP.md)
 - **Incident walkthrough:** [incidents/ANTIGRAVITY.md](./incidents/ANTIGRAVITY.md)
 - **Implementor checklists:** [IMPLEMENTORS.md](./IMPLEMENTORS.md)
-- **Questions / conformance testing:** [open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues)
+- **Questions / conformance testing:** [open an issue](https://github.com/Haserjian/assay-protocol/issues)
 
 ---
 
 **Short version:**
 
-> CSP Tool Safety doesn't stop you using powerful tools—it stops your AI using them like a sleep-deprived junior with root access and no change log.
+> Assay doesn't stop you using powerful tools—it stops your AI using them like a sleep-deprived junior with root access and no change log.
 
 ---
 
-*Created by Tim B. Haserjian. Part of the Constitutional Safety Protocol (CSP-1.0) project.*
+*Created by Tim B. Haserjian. Part of the Assay Protocol (Assay-1.0) project.*

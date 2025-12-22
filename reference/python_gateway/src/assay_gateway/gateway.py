@@ -34,7 +34,7 @@ class GatewayConfig:
 
 
 class MCPGateway:
-    """CSP MCP Gateway reference implementation.
+    """Assay MCP Gateway reference implementation.
 
     Orchestrates the enforcement flow:
     AuthN -> Discovery/AuthZ -> Preflight -> Credentials -> Sandbox -> Receipts

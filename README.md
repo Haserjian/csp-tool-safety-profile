@@ -1,12 +1,12 @@
-# CSP Tool Safety Profile
+# Assay Protocol
 
-![CSP](https://img.shields.io/badge/CSP-22%2F22%20tests-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue)
+![Assay](https://img.shields.io/badge/Assay-22%2F22%20tests-brightgreen) ![License](https://img.shields.io/badge/license-MIT-blue)
 
 **Proof your agent didn't go rogue.**
 
-When your AI agent does something unexpected, you'll wish you had receipts. CSP gives you cryptographic proof of every tool action—what happened, who authorized it, and why.
+When your AI agent does something unexpected, you'll wish you had receipts. Assay gives you cryptographic proof of every tool action—what happened, who authorized it, and why.
 
-> *"Agents talk via MCP. Agents prove via CSP."*
+> *"Agents talk via MCP. Agents prove via Assay."*
 
 ---
 
@@ -61,11 +61,11 @@ This is a spec + reference implementation for MCP gateways. 22 conformance tests
 
 ## Tooling
 
-### csp-validate: Conformance Checker
+### assay-validate: Conformance Checker
 
 ```bash
 # Validate receipts and generate report + badge
-python scripts/csp_validate.py path/to/receipts/ -o report.json --badge badge.svg
+python scripts/assay_validate.py path/to/receipts/ -o report.json --badge badge.svg
 
 # Output:
 # - PASS/FAIL for 7 conformance checks
@@ -92,7 +92,7 @@ python scripts/crypto_core.py verify r1.json r2.json r3.json --keys public_keys.
 
 ```
 reference/python_gateway/
-├── src/csp_gateway/
+├── src/assay_gateway/
 │   ├── gateway.py      # Main orchestration
 │   ├── types.py        # Core types + enums
 │   ├── registry.py     # MUST 1: Tool inventory
@@ -131,7 +131,7 @@ Not for you if: you want an agent framework, you want to ship fast without safet
 
 ## Design Partners
 
-Building an MCP gateway, agent runtime, or tool-using AI? I help teams implement CSP.
+Building an MCP gateway, agent runtime, or tool-using AI? I help teams implement Assay.
 
 | Tier | What You Get | Timeline |
 |------|--------------|----------|
@@ -139,8 +139,8 @@ Building an MCP gateway, agent runtime, or tool-using AI? I help teams implement
 | Standard Pilot | Full 9 MUSTs + conformance tests | 1-2 weeks |
 | Court-Grade | Signed receipts + audit export + conformance report | Custom |
 
-[Open an issue](https://github.com/Haserjian/csp-tool-safety-profile/issues) with label `design-partner`.
+[Open an issue](https://github.com/Haserjian/assay-protocol/issues) with label `design-partner`.
 
 ---
 
-*Created by Tim B. Haserjian. Part of the Constitutional Safety Protocol (CSP-1.0) project.*
+*Created by Tim B. Haserjian. Part of the Assay Protocol (Assay-1.0) project.*

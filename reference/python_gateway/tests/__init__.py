@@ -1,1 +1,1 @@
-"""CSP Gateway Conformance Tests."""
+"""Assay Gateway Conformance Tests."""

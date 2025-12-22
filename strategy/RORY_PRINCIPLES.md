@@ -2,7 +2,7 @@
 
 > "A flower is simply a weed with an advertising budget."
 
-This document captures behavioral/psychological principles from Rory Sutherland's work, adapted for CSP adoption strategy. The core insight: **the bottleneck is usually psychological, not technical.**
+This document captures behavioral/psychological principles from Rory Sutherland's work, adapted for Assay adoption strategy. The core insight: **the bottleneck is usually psychological, not technical.**
 
 ---
 
@@ -63,10 +63,10 @@ When a problem persists, it's often "logic-proof." The next move is a reframing 
 ## CSP-Specific Psycho-Logical Plays
 
 ### The "Receipt as Status Symbol" Play
-Make the badge something people WANT to display, not just compliance theater. SOC2 badges became status signals. CSP badges can too.
+Make the badge something people WANT to display, not just compliance theater. SOC2 badges became status signals. Assay badges can too.
 
 ### The "Dangerous Default" Inversion
-Most tools default to permissive. CSP defaults to restrictive. This is a feature—the ceremony of restriction creates trust.
+Most tools default to permissive. Assay defaults to restrictive. This is a feature—the ceremony of restriction creates trust.
 
 ### The "Proof Porn" Content Strategy
 Show the receipts. Make them beautiful. Make people want to screenshot and share them. The receipt IS the marketing.
@@ -78,7 +78,7 @@ Don't market to enterprises directly. Market to the security engineer who will c
 Instead of showing CSP working, show CSP STOPPING something dangerous. The drama of prevention > the boredom of success.
 
 ### The "Compliance Theater Arbitrage"
-Most compliance is theater—checklists and attestations. CSP is actual cryptographic proof. Position against the theater, not against non-compliance.
+Most compliance is theater—checklists and attestations. Assay is actual cryptographic proof. Position against the theater, not against non-compliance.
 
 ### The "Guardian as Character"
 Give the Guardian personality. It's not just code—it's the entity that watches your back. Anthropomorphize the safety layer.

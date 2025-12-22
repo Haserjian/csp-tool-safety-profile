@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CSP Tool Safety Demo - Proof of Concept
+Assay Demo - Proof of Concept
 
 Demonstrates:
 1. CRITICAL without plan -> REFUSED (amendment_vii_no_plan)
@@ -8,17 +8,17 @@ Demonstrates:
 3. Scope mismatch -> REFUSED (amendment_vii_scope_mismatch)
 4. Plan but missing verdict -> REFUSED (amendment_vii_no_guardian_verdict)
 
-All receipts are written to .csp_demo_receipts/<episode_id>/
+All receipts are written to .assay_demo_receipts/<episode_id>/
 """
 from __future__ import annotations
 
 from pathlib import Path
-from csp_demo.tool_safety import CSPToolSafetyDemo, ToolAction, ToolPlan, PlanStep, GuardianVerdict
+from assay_demo.tool_safety import AssayDemo, ToolAction, ToolPlan, PlanStep, GuardianVerdict
 
 
 def main() -> None:
-    receipts_root = Path(".csp_demo_receipts")
-    demo = CSPToolSafetyDemo(mode="standard", receipts_root=receipts_root)
+    receipts_root = Path(".assay_demo_receipts")
+    demo = AssayDemo(mode="standard", receipts_root=receipts_root)
     ep = demo.new_episode()
 
     print(f"\nEpisode: {ep.episode_id}")

@@ -1,4 +1,4 @@
-"""CSP MCP Gateway Conformance Tests.
+"""Assay MCP Gateway Conformance Tests.
 
 Test IDs from CONTROL_MAP.md:
 - AUTH-01, AUTH-02: Authentication
@@ -10,7 +10,7 @@ Test IDs from CONTROL_MAP.md:
 - INC-01: Kill switch
 """
 
-from csp_gateway.types import DecisionResult, ReasonCode
+from assay_gateway.types import DecisionResult, ReasonCode
 
 
 class TestAuthentication:

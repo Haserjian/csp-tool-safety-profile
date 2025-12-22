@@ -1,4 +1,4 @@
-# CSP Adoption Experiments
+# Assay Adoption Experiments
 # Based on Rory Sutherland's behavioral principles
 # Each experiment is small enough to run as an Episode and mint a receipt
 
@@ -26,11 +26,11 @@ experiments:
   - id: EXP-BADGE-002
     name: "Badge Design Variants"
     principle: "Efficiency sabotage (ceremony creates trust)"
-    hypothesis: "More detailed badge (CSP Court-Grade PASS) outperforms minimal badge (CSP)"
+    hypothesis: "More detailed badge (Assay Court-Grade PASS) outperforms minimal badge (Assay)"
     variants:
-      A: "Simple: [CSP | PASS]"
-      B: "Detailed: [CSP Court-Grade | 22/22 tests | PASS]"
-      C: "Status: [CSP Conformant | Signed Receipts | Court-Grade]"
+      A: "Simple: [Assay | PASS]"
+      B: "Detailed: [Assay Court-Grade | 22/22 tests | PASS]"
+      C: "Status: [Assay Conformant | Signed Receipts | Court-Grade]"
     channel: "Badge SVG in README"
     primary_metric: "badge_clicks"
     secondary_metrics: ["time_to_conformance_page", "enterprise_inbound"]
@@ -115,8 +115,8 @@ experiments:
     principle: "Expectation is part of the product"
     hypothesis: "Hard expectation-setting reduces wrong-fit issues"
     variants:
-      A: "Soft: 'CSP helps make agents safer'"
-      B: "Hard: 'CSP is governance infrastructure for tool-using AI. If you want an agent framework, look elsewhere. If you want proof and accountability, you're home.'"
+      A: "Soft: 'Assay helps make agents safer'"
+      B: "Hard: 'Assay is governance infrastructure for tool-using AI. If you want an agent framework, look elsewhere. If you want proof and accountability, you're home.'"
     channel: "README first paragraph"
     primary_metric: "issue_close_rate_wontfix"
     secondary_metrics: ["time_to_first_contribution", "repeat_visitors"]
@@ -161,8 +161,8 @@ experiments:
     principle: "Drama of prevention > boredom of success"
     hypothesis: "Demo showing blocked dangerous command outperforms successful command demo"
     variants:
-      A: "Success demo: 'Watch CSP approve a safe file read'"
-      B: "Block demo: 'Watch CSP stop rm -rf / in real-time'"
+      A: "Success demo: 'Watch Assay approve a safe file read'"
+      B: "Block demo: 'Watch Assay stop rm -rf / in real-time'"
     channel: "Loom / README GIF"
     primary_metric: "watch_completion_rate"
     secondary_metrics: ["share_rate", "comment_sentiment"]

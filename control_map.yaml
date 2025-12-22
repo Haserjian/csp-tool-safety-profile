@@ -1,4 +1,4 @@
-# CSP Control Map - Canonical Source
+# Assay Control Map - Canonical Source
 # This file is the single source of truth for MUST -> Test -> Evidence mappings
 # Run `python scripts/ritual_lint.py` to validate consistency
 

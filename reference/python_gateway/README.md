@@ -1,6 +1,6 @@
-# CSP MCP Gateway Reference Implementation
+# Assay MCP Gateway Reference Implementation
 
-Reference-quality Python implementation of CSP Tool Safety Profile for MCP gateways.
+Reference-quality Python implementation of Assay Protocol for MCP gateways.
 
 **Status:** Reference implementation for conformance testing. Not production-hardened.
 
@@ -59,8 +59,8 @@ This is reference code, not production:
 ## Usage Example
 
 ```python
-from csp_gateway.gateway import MCPGateway, GatewayConfig
-from csp_gateway.types import TrustLevel
+from assay_gateway.gateway import MCPGateway, GatewayConfig
+from assay_gateway.types import TrustLevel
 
 # Create gateway
 config = GatewayConfig(

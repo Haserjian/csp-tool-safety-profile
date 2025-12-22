@@ -9,6 +9,6 @@ This repository is a **specification only** (no production code or runtime). The
 - Vulnerability reports for sample JSON/snippets are out of scope; no executable release is maintained here.
 
 ## Operational Guidance
-If you implement the CSP Tool Safety Profile:
+If you implement the Assay Protocol:
 - Follow your own org’s vuln disclosure and incident response processes.
 - Treat any implementation as you would other security-sensitive infrastructure (logging, secrets management, review/approval of changes).

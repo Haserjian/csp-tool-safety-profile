@@ -1,4 +1,4 @@
-# CSP Tool Safety Profile — MCP Gateway Minimum Conformance v0.1
+# Assay Protocol — MCP Gateway Minimum Conformance v0.1
 
 **Status:** Draft companion to SPEC.md
 **Scope:** MCP (Model Context Protocol) gateways and tool runners
@@ -8,7 +8,7 @@
 
 ## Purpose
 
-This document defines the **minimum testable safety surface** for MCP gateways and tool runners implementing CSP Tool Safety Profile. It focuses on enforcement choke points that exist in production systems.
+This document defines the **minimum testable safety surface** for MCP gateways and tool runners implementing Assay Protocol. It focuses on enforcement choke points that exist in production systems.
 
 This is a companion to [SPEC.md](./SPEC.md), not a replacement. Implementers should read both.
 
@@ -323,5 +323,5 @@ Implementations targeting MCP gateways should satisfy both this profile and SPEC
 
 ---
 
-*CSP Tool Safety Profile — MCP Gateway Minimum Conformance v0.1*
+*Assay Protocol — MCP Gateway Minimum Conformance v0.1*
 *Companion to SPEC.md v1.0.0-rc1*

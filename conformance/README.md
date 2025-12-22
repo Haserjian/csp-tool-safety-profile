@@ -1,6 +1,6 @@
-# CSP Conformance Testing
+# Assay Conformance Testing
 
-How to verify your MCP gateway conforms to CSP Tool Safety Profile.
+How to verify your MCP gateway conforms to Assay Protocol.
 
 ## Quick Check
 
@@ -80,7 +80,7 @@ These require container/network infrastructure:
 
 ## Claiming Conformance
 
-To claim CSP conformance:
+To claim Assay conformance:
 
 1. Run all required tests
 2. Document any N/A items (e.g., MUST 6 if not doing OAuth proxying)

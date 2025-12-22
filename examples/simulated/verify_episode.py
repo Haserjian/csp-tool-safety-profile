@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-CSP Receipt Verifier
+Assay Receipt Verifier
 
 Verifies:
 1. Each receipt's hash is correct (integrity)
@@ -8,7 +8,7 @@ Verifies:
 3. Verdicts bind to plans (plan_hash matches)
 
 Usage:
-    python3 examples/simulated/verify_episode.py .csp_demo_receipts/<episode_id>
+    python3 examples/simulated/verify_episode.py .assay_demo_receipts/<episode_id>
 """
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ import sys
 from pathlib import Path
 from typing import Any, Dict, List
 
-from csp_demo.tool_safety import compute_receipt_hash
+from assay_demo.tool_safety import compute_receipt_hash
 
 
 def load_receipts(ep_dir: Path) -> List[Dict[str, Any]]:
@@ -30,7 +30,7 @@ def load_receipts(ep_dir: Path) -> List[Dict[str, Any]]:
 
 def main() -> None:
     if len(sys.argv) != 2:
-        print("Usage: python3 examples/simulated/verify_episode.py .csp_demo_receipts/<episode_id>")
+        print("Usage: python3 examples/simulated/verify_episode.py .assay_demo_receipts/<episode_id>")
         sys.exit(2)
 
     ep_dir = Path(sys.argv[1])
